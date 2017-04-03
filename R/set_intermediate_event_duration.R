@@ -6,7 +6,7 @@
 #' @param inter_event The intermediate_event of which the duration will be set. Accepts a list object created with the function Add_intermediate_event
 #' @param duration Accepts numerics and all functions returning a numeric. If the duration is negative, the absolute value will be taken
 #' @export
-Add_intermediate_event_duration <- function(inter_event, duration)
+set_intermediate_event_duration <- function(inter_event, duration)
 {
   if(!is.list(inter_event) || activity$type != 'inter_event' ) stop("inter_event was not defined by the Add_intermediate_event()-function")
   if(!is.numeric(duration) && !is.function(duration)) stop("duration should be of type numeric or should be a function")

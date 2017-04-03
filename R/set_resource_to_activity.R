@@ -8,7 +8,7 @@
 #' @param resource Specify the name of the resource type as a character variable. The same resource type should be later defined in the simulation environment (see Add_resource_to_simulation)
 #' @param amount Can be used to indicate that more than 1 instance of the resource type is needed to execute an activity.
 #' @export
-Add_resource_to_activity <- function(activity, resource = '', amount= 1)
+set_resource_to_activity <- function(activity, resource = '', amount= 1)
 {
   if(!is.list(activity) || activity$type != 'activity' ) stop("activity was not defined by the Add_activity()-function")
   if(!is.character(resource)) stop("resource is not of the character type")

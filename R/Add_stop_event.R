@@ -5,7 +5,7 @@
 #' @param name character variable containing the name of the stop event
 #' @param prev_element character variable containing the name of the previous element in the BPMN as a character
 #' @export
-Add_stop_event <- function(name= 'stop_event1', prev_element='')
+add_stop_event <- function(name= 'stop_event1', prev_element='')
 {
   if(!is.character(name)) stop("name is not of the character type")
   if(!is.character(prev_element)) stop("prev_element is not of the character type")

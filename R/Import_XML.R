@@ -1,8 +1,8 @@
 #' Reading in a bpmn 2.0 xml file
 #'
 #' Function is automatically initializing the bpmn-structure based on his xml file.
-#' You still need to specify the additional information: Add_activity_duration(), Add_resource_to_activity(), Add_intermediate_event_duration().
-#' As well as the simulation environment: Add_interarrival_time() & Add_resources_to_simulation()
+#' You still need to specify the additional information: add_activity_duration(), add_resource_to_activity(), add_intermediate_event_duration().
+#' As well as the simulation environment: add_interarrival_time() & add_resources_to_simulation()
 #' [tested for xml files retrieved by the signavio platform & bizagi modeller]
 #' Requirements for the BPMN:
 #' - BPMN loops should be modelled using XOR-splits & XOR-Splits
@@ -12,7 +12,7 @@
 #' - All elements (activities, splits, joins, intermediate events & stop events) should have unique names
 #'
 #' @param filepath Specify the filepath of the xml_file
-Import_XML <- function(filepath)
+import_XML <- function(filepath)
 {
   #clean xml
   test <- xml2::as_list(xml2::read_xml(filepath))
@@ -35,6 +35,11 @@ Import_XML <- function(filepath)
       {
         stop(paste('Not all the BPMN-elements (activities, intermediate events, stop events & gateways) have a unique name, the following name is used by multiple elements:', name))
       }
+      #testing wether activity has only 1 incoming & 1 outgoing arrow
+      if((length(names(test[[i]])) - length(unique(names(test[[i]]))) + 1) > 1)
+      {
+        stop(paste('All activities can have only 1 incoming and 1 outgoing sequence flow, AND-gates should be modelled using parallel gateway elements &/or loops should be modelled using exclusive gateway elements, error occured at:', name))
+      }
       unique_names <- c(unique_names, name)
       incoming <- as.character(test[[i]]$incoming)
       outgoing <- as.character(test[[i]]$outgoing)
@@ -53,6 +58,11 @@ Import_XML <- function(filepath)
       {
         stop(paste('Not all the BPMN-elements (activities, intermediate events, stop events & gateways) have a unique name, the following name is used by multiple elements:', name))
       }
+      #testing wether inter_event has only 1 incoming & 1 outgoing arrow
+      if((length(names(test[[i]])) - length(unique(names(test[[i]]))) + 1) > 1)
+      {
+        stop(paste('All intermediate events can have only 1 incoming and 1 outgoing sequence flow, AND-gates should be modelled using parallel gateway elements &/or loops should be modelled using exclusive gateway elements, error occured at:', name))
+      }
       unique_names <- c(unique_names, name)
       incoming <- as.character(test[[i]]$incoming)
       outgoing <- as.character(test[[i]]$outgoing)
@@ -69,6 +79,11 @@ Import_XML <- function(filepath)
       if(name %in% unique_names)
       {
         stop(paste('Not all the BPMN-elements (activities, intermediate events, stop events & gateways) have a unique name, the following name is used by multiple elements:', name))
+      }
+      #testing wether inter_event has only 1 incoming & 1 outgoing arrow
+      if((length(names(test[[i]])) - length(unique(names(test[[i]]))) + 1) > 1)
+      {
+        stop(paste('All intermediate events can have only 1 incoming and 1 outgoing sequence flow, AND-gates should be modelled using parallel gateway elements &/or loops should be modelled using exclusive gateway elements, error occured at:', name))
       }
       unique_names <- c(unique_names, name)
       incoming <- as.character(test[[i]]$incoming)
@@ -168,6 +183,11 @@ Import_XML <- function(filepath)
       if(name %in% unique_names)
       {
         stop(paste('Not all the BPMN-elements (activities, intermediate events, stop events & gateways) have a unique name, the following name is used by multiple elements:', name))
+      }
+      #testing wether stop event has only 1 incoming & 1 outgoing arrow
+      if((length(names(test[[i]])) - length(unique(names(test[[i]]))) + 1) > 1)
+      {
+        stop(paste('All stop events can have only 1 incoming sequence flow, AND-gates should be modelled using parallel gateway elements, error occured at:', name))
       }
       unique_names <- c(unique_names, name)
       incoming <- as.character(test[[i]]$incoming)
@@ -302,31 +322,31 @@ Import_XML <- function(filepath)
   {
     if(new_elements[[i]]$type == 'activity')
     {
-      Add_activity(name = new_elements[[i]]$name, prev_element = new_elements[[i]]$prev_element)
+      add_activity(name = new_elements[[i]]$name, prev_element = new_elements[[i]]$prev_element)
     }
     else if(new_elements[[i]]$type == 'inter_event')
     {
-      Add_intermediate_event(name = new_elements[[i]]$name, prev_element = new_elements[[i]]$prev_element)
+      add_intermediate_event(name = new_elements[[i]]$name, prev_element = new_elements[[i]]$prev_element)
     }
     else if(new_elements[[i]]$type == 'XOR-split' || new_elements[[i]]$type == 'loop-split')
     {
-      Add_XOR_split(name = new_elements[[i]]$name, prev_element = new_elements[[i]]$prev_element)
+      add_XOR_split(name = new_elements[[i]]$name, prev_element = new_elements[[i]]$prev_element)
     }
     else if(new_elements[[i]]$type == 'AND-split')
     {
-      Add_AND_split(name = new_elements[[i]]$name, prev_element = new_elements[[i]]$prev_element)
+      add_AND_split(name = new_elements[[i]]$name, prev_element = new_elements[[i]]$prev_element)
     }
     else if(new_elements[[i]]$type == 'XOR-join' || new_elements[[i]]$type == 'loop-join')
     {
-      Add_XOR_join(name = new_elements[[i]]$name, prev_element = new_elements[[i]]$prev_element,  of_split = new_elements[[i]]$of_split)
+      add_XOR_join(name = new_elements[[i]]$name, prev_element = new_elements[[i]]$prev_element,  of_split = new_elements[[i]]$of_split)
     }
     else if(new_elements[[i]]$type == 'AND-join')
     {
-      Add_AND_join(name = new_elements[[i]]$name, prev_element = new_elements[[i]]$prev_element,  of_split = new_elements[[i]]$of_split)
+      add_AND_join(name = new_elements[[i]]$name, prev_element = new_elements[[i]]$prev_element,  of_split = new_elements[[i]]$of_split)
     }
     else if(new_elements[[i]]$type =='stop_event')
     {
-      Add_stop_event(name = new_elements[[i]]$name, prev_element = new_elements[[i]]$prev_element)
+      add_stop_event(name = new_elements[[i]]$name, prev_element = new_elements[[i]]$prev_element)
     }
   }
 }

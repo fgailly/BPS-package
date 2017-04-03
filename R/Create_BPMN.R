@@ -7,7 +7,7 @@
 #' @param ... include as seperate arguments all lists and dataframes describing the elements of your BPMN (they can be specified in a random order). Accepts lists and dataframes created by the functions: Add_activity, Add_XOR_split, Add_AND_split, Add_XOR_join, Add_AND_Join
 #' @export
 #' @return A trajectory environment of the simmer package
-Create_BPMN <- function(...)
+create_BPMN <- function(...)
 {
   elements <- list(...)
   #check whether all arguments provided to the function are created by our package functions
@@ -222,7 +222,7 @@ Create_BPMN <- function(...)
         arguments[[(j+2)]] <- br
       }
       do.call(clone, args=arguments)
-      synchronize(t0)
+      synchronize(t0, mon_all = TRUE)
       #create list object storing all the information of the andstructure
       andstr <- list(name =df$name, prev_element = df$prev_element, type = df$type, traj = t0)
       name <- df$name

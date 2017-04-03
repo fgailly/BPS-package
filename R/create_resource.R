@@ -11,7 +11,7 @@
 #' @param max_queue_size Can be used to identify when the queue_size of a resource is limited. Instances arriving at the queue when the queue_size is at its maximal queue size will leave the system without finishing it.
 #' @export
 
-Add_resources_to_simulation <- function(resource = '', capacity = 1, max_queue_size = Inf, schedule)
+create_resource <- function(resource = '', capacity = 1, max_queue_size = Inf, schedule)
 {
   if(!is.character(resource)) stop("resource is not of the character type")
   if(!is.numeric(capacity) || as.integer(capacity) != capacity || capacity < 0) stop("capacity is not a positive integer")

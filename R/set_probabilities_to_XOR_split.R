@@ -10,7 +10,7 @@
 #' @param probabilities a numeric vector containing the probability of flowing through each branch.the sum should be equal to 1. The sequence of the branches should be identical to the sequence in the first_activities vector
 #' @param prob_to_continue a numeric between 0 and 1 indicating the probability of continuing without entering the loop.
 #' @export
-Add_probabilities_to_XOR_split <- function(split, first_activities = c(), probabilities = c(), prob_to_continue = 0)
+set_probabilities_to_XOR_split <- function(split, first_activities = c(), probabilities = c(), prob_to_continue = 0)
 {
   if(!is.list(split) || split$type != 'XOR-split') stop("split was not defined by the Add_XOR-split()-function")
   if(!missing(first_activities))

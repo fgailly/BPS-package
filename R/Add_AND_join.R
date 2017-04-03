@@ -6,7 +6,7 @@
 #' @param prev_element character variable containing the name of the previous element in the BPMN. A join can have multiple previous elements, you should specify them all in a vector containing their names as character. e.g: prev_element = c('el1','el2')
 #' @param of_split character variable specifying to which split this join will belong.
 #' @export
-Add_AND_join <- function(name = '', prev_element = '', of_split = '')
+add_AND_join <- function(name = '', prev_element = '', of_split = '')
 {
   if(!is.character(name)) stop("name is not of the character type")
   if(!is.character(prev_element)) stop("prev_element is not of the character type")

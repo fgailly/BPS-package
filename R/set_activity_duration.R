@@ -6,7 +6,7 @@
 #' @param activity The activity of which the duration will be set. Accepts a list object created with the function Add_activity
 #' @param duration Accepts numerics and all functions returning a numeric. If the duration is negative, the absolute value will be taken
 #' @export
-Add_activity_duration <- function(activity, duration)
+set_activity_duration <- function(activity, duration)
 {
   if(!is.list(activity) || activity$type != 'activity' ) stop("activity was not defined by the Add_activity()-function")
   if(!is.numeric(duration) && !is.function(duration)) stop("duration should be of type numeric or should be a function")
