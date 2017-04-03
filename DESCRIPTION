@@ -1,0 +1,12 @@
+Package: BPMNsimulator
+Type: Package
+Title: Business Process Model Notation Simulator
+Version: 0.1
+Date: 2017-03-08
+Authors@R: person("Yoren", "Van Couwenberghe", email = "yoren_1@hotmail.com", role = c("aut", "cre"))
+Description: Package that builds on the simmer-package. Helpful when conducting a business process simulation starting from a BPMN file.
+License: MIT + file LICENSE
+LazyData: TRUE
+RoxygenNote: 6.0.1
+Depends: simmer(>= 3.5.1)
+Import: xml2 (>=1.1.1)
