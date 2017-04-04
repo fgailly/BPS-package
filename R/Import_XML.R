@@ -1,14 +1,12 @@
 #' Reading in a bpmn 2.0 xml file
 #'
 #' Function is automatically initializing the bpmn-structure based on his xml file.
-#' You still need to specify the additional information: add_activity_duration(), add_resource_to_activity(), add_intermediate_event_duration().
-#' As well as the simulation environment: add_interarrival_time() & add_resources_to_simulation()
+#' You still need to specify the additional information: set_activity_duration(), set_resource_to_activity(), set_intermediate_event_duration(), ....
+#' As well as the simulation environment: set_interarrival_time() & create_resource()
 #' [tested for xml files retrieved by the signavio platform & bizagi modeller]
 #' Requirements for the BPMN:
-#' - BPMN loops should be modelled using XOR-splits & XOR-Splits
+#' - BPMN loops should be modelled using XOR-splits & XOR-joins
 #' - AND-structures should be modelled using AND-splits & AND-joins
-#' - XOR-split and his accompanying XOR-join (if any) should be named split_xxx & join_xxx respectively, where xxx is the unique name of the gatestructure (e.g split_qualitycheck & join_qualitycheck)
-#' - AND-split and his accompanying AND-join should be named split_xxx & join_xxx respectively, where xxx is the unique name of the gatestructure (e.g split_andstr1 & join_andstr1)
 #' - All elements (activities, splits, joins, intermediate events & stop events) should have unique names
 #'
 #' @param filepath Specify the filepath of the xml_file
@@ -22,6 +20,7 @@ import_XML <- function(filepath)
   #Create list object storing critical information about the trajectory flow
   #delete BPMN elements that do not provide information for simulation (e.g. data Objects, pools/lanes)
   #throw error when BPMN elements are used that are not supported by our package (OR-GATES, event Based gates)
+  number_startevents <- 0
   for(i in 1:length(test))
   {
     if(attr(test[i], which = 'name') == 'task')
@@ -96,7 +95,7 @@ import_XML <- function(filepath)
       name <- attr(test[[i]], which = 'name')
       if(name == "")
       {
-        stop('Not all gateways are named in your BPMN, also check the naming convention for gateways: see ?Import_XML')
+        stop('Not all gateways are named in your BPMN')
       }
       if(name %in% unique_names)
       {
@@ -137,7 +136,7 @@ import_XML <- function(filepath)
       name <- attr(test[[i]], which = 'name')
       if(name == "")
       {
-        stop('Not all gateways are named in your BPMN, also check the naming convention for gateways: see ?Import_XML')
+        stop('Not all gateways are named in your BPMN')
       }
       if(name %in% unique_names)
       {
@@ -197,6 +196,11 @@ import_XML <- function(filepath)
     else if((attr(test[i], which = 'name') == 'startEvent'))
     {
       l <- list(name = '', type = 'remove')
+      number_startevents <- number_startevents + 1
+      if(number_startevents > 1)
+      {
+        stop('BPMN contains more than 1 startevent, BPMNs with multiple startevents are not supported by the package')
+      }
     }
     else if((attr(test[i], which = 'name') == 'sequenceFlow'))
     {
@@ -247,7 +251,7 @@ import_XML <- function(filepath)
   {
     if(elements[[i]]$type == "remove")
     {
-      elements[i] <- NULL
+      elements[[i]] <- NULL
     }
     i <- i+1
   }
@@ -296,26 +300,43 @@ import_XML <- function(filepath)
     new_elements[[i]] <- l
   }
   #initialize of_split of XOR-joins and AND-joins
-  #Naming convention: split & his accompanying join are named split_NAMEx & join_NAMEx
+  #Rebuild branches starting from the prev_elements in join & the first common split is the split of the join
+  #We start from the previous elements of the join
   for(i in 1:length(new_elements))
   {
-    if(new_elements[[i]]$type == 'XOR-join' || new_elements[[i]]$type == 'AND-join')
+    if(new_elements[[i]]$type == 'AND-join' || new_elements[[i]]$type == 'XOR-join')
     {
-      new_elements[[i]]$of_split = paste("split", substring(new_elements[[i]]$name,6), sep="_")
-    }
-    #check wether this split is present (wether naming convention is followed)
-    bool <- FALSE
-    for(j in 1:length(new_elements))
-    {
-
-      if(new_elements[[j]]$name == new_elements[[i]]$of_split)
+      branches <- vector('list', length(new_elements[[i]]$prev_element))
+      for(j in 1:length(new_elements[[i]]$prev_element))
       {
-        bool <- TRUE
+        branches[[j]][1] <- new_elements[[i]]$prev_element[j]
+        for(z in 1:length(new_elements))
+        {
+          if(new_elements[[z]]$name == branches[[j]][length(branches[[j]])])
+          {
+            checker <- new_elements[[z]]
+          }
+        }
+        f <- 0
+        while(f == 0)
+        {
+          for(k in 1:length(new_elements))
+          {
+            if(new_elements[[k]]$name %in% checker$prev_element)
+            {
+              branches[[j]][length(branches[[j]])+1] <- new_elements[[k]]$name
+              checker <- new_elements[[k]]
+            }
+            if(checker$prev_element == '')
+            {
+              f <- 1
+              break
+            }
+          }
+        }
       }
-    }
-    if(bool == FALSE)
-    {
-      stop("Naming convention of gate-structures is not followed. the split and join of the same gate-structure should be named split_NameOfGateStructure & join_NameOfGateStructure, were NameOfGateStructure should be unique for each gatestructure")
+      common_elements <- Reduce(intersect, branches)
+      new_elements[[i]]$of_split <- common_elements[1]
     }
   }
   for(i in 1:length(new_elements))
