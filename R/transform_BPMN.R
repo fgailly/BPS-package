@@ -7,7 +7,7 @@
 #' @param ... include as seperate arguments all lists and dataframes describing the elements of your BPMN (they can be specified in a random order). Accepts lists and dataframes created by the functions: Add_activity, Add_XOR_split, Add_AND_split, Add_XOR_join, Add_AND_Join
 #' @export
 #' @return A trajectory environment of the simmer package
-create_BPMN <- function(...)
+transform_BPMN <- function(...)
 {
   elements <- list(...)
   #check whether all arguments provided to the function are created by our package functions
@@ -118,7 +118,6 @@ create_BPMN <- function(...)
   }
   #Deal with AND-gatestructures and XOR-gatestructures
   i <- length(elements)
-  bpmn <<- elements
   while(i > 0)
   {
     if (elements[[i]]$type == 'AND-split')

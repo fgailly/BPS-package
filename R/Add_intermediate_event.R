@@ -9,6 +9,10 @@ add_intermediate_event <- function(name= 'int_event1', prev_element='')
 {
   if(!is.character(name)) stop("name is not of the character type")
   if(!is.character(prev_element)) stop("prev_element is not of the character type")
+  if(length(prev_element) > 1)
+  {
+    stop("An intermediate event can have only 1 incoming and 1 outgoing sequence flow, model loops with XOR-gateways and AND-gates with AND-gateways")
+  }
   name <- name
   prev_element <- prev_element
   task <- 0

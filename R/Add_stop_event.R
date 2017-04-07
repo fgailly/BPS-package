@@ -9,6 +9,10 @@ add_stop_event <- function(name= 'stop_event1', prev_element='')
 {
   if(!is.character(name)) stop("name is not of the character type")
   if(!is.character(prev_element)) stop("prev_element is not of the character type")
+  if(length(prev_element) > 1)
+  {
+    stop("A stop event can have only 1 incoming sequence flow, model AND-gates with AND-gateways")
+  }
   name <- name
   prev_element <- prev_element
   type <- 'stop_event'

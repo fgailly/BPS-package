@@ -9,6 +9,10 @@ add_XOR_split <- function(name= '', prev_element = '')
 {
   if(!is.character(name)) stop("name is not of the character type")
   if(!is.character(prev_element)) stop("prev_element is not of the character type")
+  if(length(prev_element) > 1)
+  {
+    stop("A XOR-split can have only 1 incoming sequence flow, model loops with XOR-gateways and AND-gates with AND-gateways")
+  }
   name <- name
   type <- 'XOR-split'
   prev_element <- prev_element

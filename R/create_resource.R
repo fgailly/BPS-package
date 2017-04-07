@@ -17,7 +17,7 @@ create_resource <- function(resource = '', capacity = 1, max_queue_size = Inf, s
   if(!is.numeric(capacity) || as.integer(capacity) != capacity || capacity < 0) stop("capacity is not a positive integer")
   if(missing(schedule))
   {
-    if (exists('simulation_environment'))
+    if (exists('simulation_environment') && now(simulation_environment) == 0)
     {
       add_resource(simulation_environment, name = resource, capacity = capacity, queue_size = max_queue_size)
     }
@@ -30,7 +30,7 @@ create_resource <- function(resource = '', capacity = 1, max_queue_size = Inf, s
   else
   {
     if(!is.environment(schedule)) stop("schedule parameter should be created by the schedule()-function")
-    if (exists('simulation_environment'))
+    if (exists('simulation_environment') && now(simulation_environment) == 0)
     {
       add_resource(simulation_environment, name = resource, schedule, queue_size = max_queue_size)
     }
