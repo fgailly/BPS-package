@@ -1,9 +1,10 @@
 #' Add an Intermediate BPMN-event
 #'
 #' Creates a list in the global environment storing the information of the intermediate event.
-#' The name of the list will be the name specified in the function call.
+#' The name of the list will be the name argument of the function.
+#' The list will have a custom class: bpmn_element
 #' @param name character variable containing the name of the intermediate event
-#' @param prev_element character variable containing the name of the previous element in the BPMN as a character
+#' @param prev_element character variable containing the name of the previous element in the BPMN
 #' @export
 add_intermediate_event <- function(name= 'int_event1', prev_element='')
 {

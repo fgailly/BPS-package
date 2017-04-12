@@ -9,9 +9,10 @@ add_AND_split(name = "", prev_element = "")
 \arguments{
 \item{name}{character variable containing the name of the split}
 
-\item{prev_element}{character variable containing the name of the previous element in the BPMN as a character}
+\item{prev_element}{character variable containing the name of the previous element in the BPMN}
 }
 \description{
-Creates a dataframe in the global environment storing the information of the AND-split.
-The name of the dataframe will be the name specified in the function call.
+Creates a list in the global environment storing the information of the AND-split.
+The name of the list will be the name argument of the function.
+The list will have a custom class: bpmn_element
 }

@@ -9,11 +9,12 @@ add_XOR_join(name = "", prev_element = "", of_split = "")
 \arguments{
 \item{name}{character variable containing the name of the join}
 
-\item{prev_element}{character variable containing the name of the previous element in the BPMN. A join can have multiple previous elements, you should specify them all in a vector containing their names as character. e.g: prev_element = c('el1','el2')}
+\item{prev_element}{character variable containing the name of the previous element in the BPMN. A join can have multiple previous elements, you should specify them all in a character vector. e.g: prev_element = c('element1','element2')}
 
-\item{of_split}{character variable specifying to which split this join will belong.}
+\item{of_split}{character variable specifying to which split this join belongs.}
 }
 \description{
-Creates a dataframe in the global environment storing the information of the XOR-split.
-The name of the dataframe will be the name specified in the function call.
+Creates a list in the global environment storing the information of the XOR-split.
+The name of the list will be the name argument of the function.
+The list will have a custom class: bpmn_element
 }

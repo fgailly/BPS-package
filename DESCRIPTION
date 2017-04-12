@@ -9,4 +9,4 @@ License: MIT + file LICENSE
 LazyData: TRUE
 RoxygenNote: 6.0.1
 Depends: simmer(>= 3.5.1)
-Import: xml2 (>=1.1.1)
+Imports: xml2, methods
