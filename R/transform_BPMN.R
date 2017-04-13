@@ -18,7 +18,7 @@ transform_BPMN <- function(...)
   {
     if(!methods::is(elements[[i]], "bpmn_element") )
     {stop("Not all arguments were created by the Add_activity(), Add_XOR_split(), Add_AND_split(), Add_XOR_join() or Add_AND_join() functions")}
-    rm(list = elements[[i]]$name, envir=sys.frame(-1))
+    rm(list = elements[[i]]$name, envir = globalenv())
   }
   #Sort the elements based on the prev_element variable
   i <- 1
@@ -162,7 +162,7 @@ transform_BPMN <- function(...)
       #put start elements of the branch in a seperate branch
       for(z in (start_ind+1):(stop_ind-1))
       {
-        if(elements[[z]]$prev_element == df$name)
+        if(sum(elements[[z]]$prev_element == df$name) ==1)
         {
           branches[[counter]] <- elements[[z]]
           counter <- counter + 1
@@ -259,7 +259,7 @@ transform_BPMN <- function(...)
       #we can't use number of prev_element of join.
       for(j in (start_ind+1):length(elements))
       {
-        if(elements[[j]]$prev_element == df$name)
+        if(sum(elements[[j]]$prev_element == df$name) ==1)
         {
           df$nmbr_of_branches <- df$nmbr_of_branches+1
         }
@@ -270,7 +270,7 @@ transform_BPMN <- function(...)
       #put start elements of the branch in a seperate branch
       for(z in (start_ind+1):length(elements))
       {
-        if(elements[[z]]$prev_element == df$name)
+        if(sum(elements[[z]]$prev_element == df$name) ==1)
         {
           branches[[counter]] <- elements[[z]]
           counter <- counter + 1

@@ -12,10 +12,11 @@ import_XML(filepath)
 \description{
 Function is automatically initializing the bpmn-structure based on his xml file.
 You still need to specify the additional information: set_activity_duration(), set_resource_to_activity(), set_intermediate_event_duration(), ....
-As well as the simulation environment: set_interarrival_time() & create_resource()
+As well as the simulation environment: create_arrivals() & create_resource()
 [tested for xml files retrieved by the signavio platform & bizagi modeller]
 Requirements for the BPMN:
 - BPMN loops should be modelled using XOR-splits & XOR-joins
 - AND-structures should be modelled using AND-splits & AND-joins
 - All elements (activities, splits, joins, intermediate events & stop events) should have unique names
+- BPMN can only contain 1 start event
 }

@@ -7,14 +7,14 @@
 set_resource_to_activity(activity, resource = "", amount = 1)
 }
 \arguments{
-\item{activity}{The activity a resource should be added to. Accepts a list object created with the function Add_activity}
+\item{activity}{The activity a resource should be added to. Accepts a list object created with the function: add_activity}
 
-\item{resource}{Specify the name of the resource type as a character variable. The same resource type should be later defined in the simulation environment (see Add_resource_to_simulation)}
+\item{resource}{Specify the name of the resource type as a character variable. The same resource type should be later defined in the simulation environment (see ?create_resource())}
 
 \item{amount}{Can be used to indicate that more than 1 instance of the resource type is needed to execute an activity.}
 }
 \description{
 Specify which resource is responsible for executing an activity
 The function will alter the existing list of the activity
-Note that this information should be added before running the create_BPMN() function (see ?create_BPMN())
+Note that this information should be added before running the transform_BPMN() function (see ?transform_BPMN())
 }

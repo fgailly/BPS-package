@@ -330,7 +330,7 @@ import_XML <- function(filepath)
               branches[[j]][length(branches[[j]])+1] <- new_elements[[k]]$name
               checker <- new_elements[[k]]
             }
-            if(checker$prev_element == '')
+            if('' %in% checker$prev_element)
             {
               f <- 1
               break

@@ -15,7 +15,7 @@ add_XOR_join <- function(name = '', prev_element = '', of_split = '')
   name <- name
   type <- 'XOR-join'
   prev_element <- prev_element
-  datafr <- data.frame(name, prev_element, type, of_split, stringsAsFactors = FALSE)
-  class(datafr) <- 'bpmn_element'
-  assign(name,datafr, pos = 1)
+  l <- list(name = name, prev_element=prev_element, type = type, of_split = of_split, stringsAsFactors = FALSE)
+  class(l) <- 'bpmn_element'
+  assign(name,l, pos = 1)
 }

@@ -8,17 +8,17 @@ set_probabilities_to_XOR_split(split, first_activities = c(),
   probabilities = c(), prob_to_continue = 0)
 }
 \arguments{
-\item{split}{The split object. Accepts a list object created with the function Add_XOR_split}
+\item{split}{The split object. Accepts a list object created with the function: add_XOR_split}
 
-\item{first_activities}{a character vector containing the name of the first element of each branch of the XOR-GATE structure.}
+\item{first_activities}{a character vector containing the name of the first element of each alternative path of the XOR-GATE structure.}
 
-\item{probabilities}{a numeric vector containing the probability of flowing through each branch.the sum should be equal to 1. The sequence of the branches should be identical to the sequence in the first_activities vector}
+\item{probabilities}{a numeric vector containing the probability of flowing through each alternative path.the sum should be equal to 1. The sequence of the branches should be identical to the sequence in the first_activities vector}
 
 \item{prob_to_continue}{a numeric between 0 and 1 indicating the probability of continuing without entering the loop.}
 }
 \description{
 A XOR-split is used in BPMN to model a XOR-GATE structure or to model a LOOP.
-In the case of a XOR-GATE structure, this function can be used to specify the probability to flow through a certain branch by using the parameters first_activities and probabilities.
-In the case of a LOOP, this function can be used to specify the probability to continue (the probability that you do not go into the loop) by using the parameter prob_to_continue
-Note that this information should be added before running the create_BPMN() function (see ?create_BPMN())
+In the case of a XOR-GATE structure, this function can be used to specify the probability to flow through one of the alternative paths by using the parameters first_activities and probabilities.
+In the case of a LOOP, this function can be used to specify the probability to continue (the probability that you don't go into the loop) by using the parameter prob_to_continue
+Note that this information should be added before running the transform_BPMN() function (see ?transform_BPMN())
 }

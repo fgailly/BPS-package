@@ -7,13 +7,13 @@
 transform_BPMN(...)
 }
 \arguments{
-\item{...}{include as seperate arguments all lists and dataframes describing the elements of your BPMN (they can be specified in a random order). Accepts lists and dataframes created by the functions: Add_activity, Add_XOR_split, Add_AND_split, Add_XOR_join, Add_AND_Join}
+\item{...}{include as seperate arguments all lists describing the elements of your BPMN (they can be specified in a random order). Accepts lists created by the functions: add_activity, add_XOR_split, add_AND_split, add_XOR_join, add_AND_Join, add_intermediate_event}
 }
 \value{
 A trajectory environment of the simmer package
 }
 \description{
 The function returns a trajectory environment of the simmer package.
-Before running this function all additional information should be added.(see ?add_activity_duration, ?Add_resource_to_activity, ?Add_probabilities_to_XOR_split)
+Before running this function, all additional information should be added first.(see ?set_activity_duration, ?set_resource_to_activity, ?set_probabilities_to_XOR_split)
 All arguments passed to this function will be removed from the global environment.
 }

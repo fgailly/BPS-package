@@ -19,5 +19,6 @@ add_intermediate_event <- function(name= 'int_event1', prev_element='')
   task <- 0
   type <- 'inter_event'
   l <- list(name = name, prev_element = prev_element, task = task, type = type)
+  class(l) <- 'bpmn_element'
   assign(name,l, pos = 1)
 }

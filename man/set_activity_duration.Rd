@@ -7,12 +7,12 @@
 set_activity_duration(activity, duration)
 }
 \arguments{
-\item{activity}{The activity of which the duration will be set. Accepts a list object created with the function Add_activity}
+\item{activity}{The activity of which the duration will be set. Accepts a list object created with the function: add_activity}
 
 \item{duration}{Accepts numerics and all functions returning a numeric. If the duration is negative, the absolute value will be taken}
 }
 \description{
 Function that can be used to specify how long it takes to execute an activity.
 The function will alter the existing list of the activity
-Note that this information should be added before running the create_BPMN() function (see ?create_BPMN())
+Note that this information should be added before running the transform_BPMN() function (see ?transform_BPMN())
 }
