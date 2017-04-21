@@ -24,9 +24,11 @@ import_XML <- function(filepath)
   #delete BPMN elements that do not provide information for simulation (e.g. data Objects, pools/lanes)
   #throw error when BPMN elements are used that are not supported by our package (OR-GATES, event Based gates)
   number_startevents <- 0
+  counter <- 1
+  counter_stop <- 1
   for(i in 1:length(test))
   {
-    if(attr(test[i], which = 'name') == 'task')
+    if(attr(test[i], which = 'name') == 'task' || attr(test[i], which = 'name') == 'subProcess')
     {
       name <- attr(test[[i]], which = 'name')
       if(name == "")
@@ -96,9 +98,15 @@ import_XML <- function(filepath)
     else if(attr(test[i], which = 'name') == 'exclusiveGateway')
     {
       name <- attr(test[[i]], which = 'name')
-      if(name == "")
+      if(name == "" && attr(test[[i]], which = 'gatewayDirection') == 'Diverging')
       {
-        stop('Not all gateways are named in your BPMN')
+        stop('Not all XOR-splits are named in your BPMN')
+      }
+      if(name == "" && attr(test[[i]], which = 'gatewayDirection') == 'Converging')
+      {
+        warning(paste0('Not all XOR-joins are named in your BPMN, a default name is given for an unnamed XOR-join: default_gateway_', as.character(counter)))
+        name <- paste0('default_gateway_', as.character(counter))
+        counter <- counter + 1
       }
       if(name %in% unique_names)
       {
@@ -139,7 +147,9 @@ import_XML <- function(filepath)
       name <- attr(test[[i]], which = 'name')
       if(name == "")
       {
-        stop('Not all gateways are named in your BPMN')
+        warning(paste0('Not all AND-gateways are named in your BPMN, a default name is given for an unnamed AND-gateway: default_gateway_', as.character(counter)))
+        name <- paste0('default_gateway_', as.character(counter))
+        counter <- counter + 1
       }
       if(name %in% unique_names)
       {
@@ -180,7 +190,9 @@ import_XML <- function(filepath)
       name <- attr(test[[i]], which = 'name')
       if(name == "")
       {
-        stop('Not all stop events are named in your BPMN')
+        warning(paste0('Not all end events are named in your BPMN, a default name is given for an unnamed end event: default_end_', as.character(counter_stop)))
+        name <- paste0('default_end_', as.character(counter_stop))
+        counter_stop <- counter_stop + 1
       }
       if(name %in% unique_names)
       {
@@ -340,6 +352,35 @@ import_XML <- function(filepath)
       }
       common_elements <- Reduce(intersect, branches)
       new_elements[[i]]$of_split <- common_elements[1]
+      #Deal with loops where previous element is not a XOR-split
+      if(new_elements[[i]]$type == 'XOR-join')
+      {
+        for(j in 1:length(new_elements))
+        {
+          if(common_elements[1] == new_elements[[j]]$name && new_elements[[j]]$type != 'XOR-split')
+          {
+            for(k in 1:length(branches))
+            {
+              if(branches[[k]][1] != common_elements[1])
+              {
+                #delete that element from prev_element of the XOR-join
+                new_elements[[i]]$prev_element <- new_elements[[i]]$prev_element[!new_elements[[i]]$prev_element %in% branches[[k]][1]]
+                for(z in 1:length(branches[[k]]))
+                {
+                  for(a in 1:length(new_elements))
+                  {
+                    if(branches[[k]][z] == new_elements[[a]]$name && new_elements[[a]]$type == 'XOR-split')
+                    {
+                      new_elements[[i]]$of_split <- branches[[k]][z]
+                      break
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
   for(i in 1:length(new_elements))

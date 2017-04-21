@@ -50,7 +50,7 @@ transform_BPMN <- function(...)
     }
   }
   i <- length(elements)
-  #Deal with gates
+  #Sorting: Deal with gates
   checked <- character()
   while(i >= 1)
   {
@@ -108,12 +108,63 @@ transform_BPMN <- function(...)
       }
       if(join_ind != 0 && join_ind < split_ind) #we have a loop
       {
-        #create a dataframe 'loop element' with same name as the XOR-split element
-        loop_element <- data.frame(name = elements[[split_ind]]$name, prev_element = elements[[split_ind]]$prev_element, type = 'loop', loop_to = join_ind, prob_to_continue = elements[[split_ind]]$prob_to_continue)
-        #amount parameter of the rollback simmer function should still be initialized
-        #place loop_element in place of the current split element & remove join element
-        elements[[split_ind]] <- loop_element
-        elements <- elements[-(join_ind)]
+        #check wether some activities should be executed first before returning
+        loop_handeled <- FALSE
+        for(j in i:length(elements))
+        {
+          if(elements[[j]]$type != 'stop_event')
+          {
+            continue <- TRUE
+            for(k in i:length(elements))
+            {
+              if(sum(elements[[j]]$name %in% elements[[k]]$prev_element) >= 1)
+              {
+                continue <- FALSE
+              }
+            }
+            if(continue)
+            {
+              k <- j
+              while(k >= i)
+              {
+                if(elements[[k]]$type == 'XOR-split')
+                {
+                  if(elements[[k]]$name == elements[[i]]$name)
+                  {
+                    #create a dataframe 'loop element' with a probability to continue = 0
+                    loop_element <- list(name = paste0('loop_', elements[[j]]$name), prev_element = elements[[j]]$name, type = 'loop', loop_to = join_ind, prob_to_continue = 0)
+                    #amount parameter of the rollback simmer function should still be initialized
+                    #place loop_element after the last activity that should be executed
+                    if(j == length(elements))
+                    {
+                      elements <- c(elements[1:j], 'empty')
+                      elements[[length(elements)]] <- loop_element
+                    }
+                    else
+                    {
+                      elements <- c(elements[1:j], empty, elements[(j+1),length(elements)])
+                      elements[[(j+1)]] <- loop_element
+                    }
+                    #remove join element
+                    elements <- elements[-(join_ind)]
+                    loop_handeled <- TRUE
+                  }
+                  break
+                }
+                k <- k-1
+              }
+            }
+          }
+        }
+        if(loop_handeled == FALSE)
+        {
+          #create a dataframe 'loop element' with same name as the XOR-split element
+          loop_element <- list(name = elements[[split_ind]]$name, prev_element = elements[[split_ind]]$prev_element, type = 'loop', loop_to = join_ind, prob_to_continue = elements[[split_ind]]$prob_to_continue)
+          #amount parameter of the rollback simmer function should still be initialized
+          #place loop_element in place of the current split element & remove join element
+          elements[[split_ind]] <- loop_element
+          elements <- elements[-(join_ind)]
+        }
       }
     }
     i <- i-1
@@ -381,6 +432,7 @@ transform_BPMN <- function(...)
           timeout(br, task = 0)
           remove[[remove_ind]] <- branches[[j]][[1]]
           remove_ind <- remove_ind +1
+          branches[[j]][[1]]$type == 'stop_event_pseudo'
         }
         #loop through selected branch
         for(k in 1:length(branches[[j]]))
@@ -416,19 +468,19 @@ transform_BPMN <- function(...)
             for(z in 1:length(remove))
             {
               #ADDED
-              if(elements[[z]]$type == 'inter_event')
+              if(remove[[z]]$type == 'inter_event')
               {
                 amount <- amount + 1
               }
               #ADDED
-              if(elements[[z]]$type == 'stop_event')
+              if(remove[[z]]$type == 'stop_event_pseudo')
               {
                 amount <- amount + 1
               }
-              if(elements[[z]]$type == 'activity')
+              if(remove[[z]]$type == 'activity')
               {
                 #if the activity element has a resource it is translated into 3 r-activities
-                if(elements[[z]]$resource != 'N/A')
+                if(remove[[z]]$resource != 'N/A')
                 {
                   amount <- amount + 3
                 }
@@ -437,19 +489,21 @@ transform_BPMN <- function(...)
                   amount <- amount + 1
                 }
               }
+
               #AND-gate structure is seen as 2 r-activities by the rollback function
-              else if(elements[[z]]$type == 'AND-structure')
+              else if(remove[[z]]$type == 'AND-structure')
               {
                 amount <- amount + 2
               }
               #XOR-gate structure is seen as 1 r-activities by the rollback function
-              else if(elements[[z]]$type == 'XOR-structure')
+              else if(remove[[z]]$type == 'XOR-structure')
               {
                 amount <- amount + 1
               }
             }
             #also include the branch function itself
             amount <- amount + 1
+            print(amount)
             for(z in branches[[j]][[k]]$loop_to:(i-1))
             {
               #ADDED
@@ -467,6 +521,7 @@ transform_BPMN <- function(...)
                 else
                 {
                   amount <- amount + 1
+                  print(elements[[z]]$name)
                 }
               }
               #AND-gate structure is seen as 2 r-activities by the rollback function
