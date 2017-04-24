@@ -360,9 +360,16 @@ transform_BPMN <- function(...)
       {
         l <- branches[j]
         place <- 2
+        #if the first element is the join-element, you should continue
+        if(l[[1]]$type == 'XOR-join' && l[[1]]$of_split == df$name)
+        {
+          continue[j] <- TRUE
+          branches[[j]] <- l
+          break
+        }
         for(k in (start_ind+1):length(elements))
         {
-          if( sum(elements[[k]]$prev_element == l[[length(l)]]$name) == 1)
+          if(sum(elements[[k]]$prev_element == l[[length(l)]]$name) == 1)
           {
             if(elements[[k]]$type == 'XOR-join')
             {
@@ -392,21 +399,17 @@ transform_BPMN <- function(...)
       #XOR-structure object will replace split, all objects between split and join, join
       #as a consequence the element after the join his prev_element variable should be renamed
       if(stop_ind != 0){
+        #AND-structure object will replace split, all objects between split and join, join
+        #as a consequence the element after the join his previous element variable should be renamed
         for(j in start_ind:length(elements))
         {
           if(sum(elements[[j]]$prev_element == elements[[stop_ind]]$name) >= 1)
           {
-            if(is.data.frame(elements[[j]]))  #elements is dataframe ==> can be join object and we should rename the correct row
+            for(k in 1:length(elements[[j]]$prev_element)) #rename the correct prev_element if you have a join
             {
-              for(k in 1:length(elements[[j]]$prev_element))
-              {
-                if(elements[[j]]$prev_element[k] == elements[[stop_ind]]$name) {
-                  elements[[j]]$prev_element[k] <- df$name
-                }
+              if(elements[[j]]$prev_element[k] == elements[[stop_ind]]$name) {
+                elements[[j]]$prev_element[k] <- df$name
               }
-            }
-            else{
-              elements[[j]]$prev_element <- df$name
             }
           }
         }
@@ -425,14 +428,22 @@ transform_BPMN <- function(...)
       for(j in 1:length(branches))
       {
         br <- create_trajectory()
-        #ADDED
+        #If branch goes directly to stop_event, Add pseudo-task that has duration of 0, simmer does not accept otherwise
         if(branches[[j]][[1]]$type == 'stop_event')
+        {
+          timeout(br, task = 0)
+          branches[[j]][[1]]$type == 'stop_event_pseudo'
+          remove[[remove_ind]] <- branches[[j]][[1]]
+          remove_ind <- remove_ind +1
+        }
+        #If branch goes directly to the XOR-join, Add pseudo-task that has duration of 0, simmer does not accept otherwise
+        if(branches[[j]][[1]]$type == 'XOR-join' && branches[[j]][[1]]$of_split == df$name)
         {
           ##Add pseudo-task that has duration of 0, simmer does not accept otherwise
           timeout(br, task = 0)
+          branches[[j]][[1]]$type == 'XOR-join_pseudo'
           remove[[remove_ind]] <- branches[[j]][[1]]
           remove_ind <- remove_ind +1
-          branches[[j]][[1]]$type == 'stop_event_pseudo'
         }
         #loop through selected branch
         for(k in 1:length(branches[[j]]))
@@ -477,6 +488,11 @@ transform_BPMN <- function(...)
               {
                 amount <- amount + 1
               }
+              #ADDED
+              if(remove[[z]]$type == 'XOR-join_pseudo')
+              {
+                amount <- amount + 1
+              }
               if(remove[[z]]$type == 'activity')
               {
                 #if the activity element has a resource it is translated into 3 r-activities
@@ -503,7 +519,6 @@ transform_BPMN <- function(...)
             }
             #also include the branch function itself
             amount <- amount + 1
-            print(amount)
             for(z in branches[[j]][[k]]$loop_to:(i-1))
             {
               #ADDED
@@ -521,7 +536,6 @@ transform_BPMN <- function(...)
                 else
                 {
                   amount <- amount + 1
-                  print(elements[[z]]$name)
                 }
               }
               #AND-gate structure is seen as 2 r-activities by the rollback function

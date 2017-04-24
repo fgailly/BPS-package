@@ -210,12 +210,15 @@ import_XML <- function(filepath)
     }
     else if((attr(test[i], which = 'name') == 'startEvent'))
     {
-      l <- list(name = '', type = 'remove')
       number_startevents <- number_startevents + 1
       if(number_startevents > 1)
       {
         stop('BPMN contains more than 1 startevent, BPMNs with multiple startevents are not supported by the package')
       }
+      name <- 'start_event_default'
+      type <- 'start_event'
+      outgoing = as.character(test[[i]]$outgoing)
+      l <- list(name = name, incoming = 'no-incoming-because-stop-event', outgoing = outgoing, type = type)
     }
     else if((attr(test[i], which = 'name') == 'sequenceFlow'))
     {
@@ -337,15 +340,21 @@ import_XML <- function(filepath)
         {
           for(k in 1:length(new_elements))
           {
+            if(checker$name == "start_event_default")
+            {
+              f <- 1
+              break
+            }
+            if('start_event_default' %in% checker$prev_element)
+            {
+              branches[[j]][length(branches[[j]])+1] <- 'start_event_default'
+              f <- 1
+              break
+            }
             if(new_elements[[k]]$name %in% checker$prev_element)
             {
               branches[[j]][length(branches[[j]])+1] <- new_elements[[k]]$name
               checker <- new_elements[[k]]
-            }
-            if('' %in% checker$prev_element)
-            {
-              f <- 1
-              break
             }
           }
         }
@@ -357,14 +366,18 @@ import_XML <- function(filepath)
       {
         for(j in 1:length(new_elements))
         {
+          #check whether of_split variable is of the type XOR-split ==> if NOT, we have a loop
           if(common_elements[1] == new_elements[[j]]$name && new_elements[[j]]$type != 'XOR-split')
           {
             for(k in 1:length(branches))
             {
+              #the branch of which the first element is not the common_element is the loop-branch
               if(branches[[k]][1] != common_elements[1])
               {
-                #delete that element from prev_element of the XOR-join
+                #delete that element from the prev_elements of the join!
                 new_elements[[i]]$prev_element <- new_elements[[i]]$prev_element[!new_elements[[i]]$prev_element %in% branches[[k]][1]]
+                #search for the correct split_element of the join in this loop-branch
+                #loop branch is backwards rebuild from the join, this means the first split you will encounter will be the split of the join
                 for(z in 1:length(branches[[k]]))
                 {
                   for(a in 1:length(new_elements))
