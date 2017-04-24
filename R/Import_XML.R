@@ -345,16 +345,21 @@ import_XML <- function(filepath)
               f <- 1
               break
             }
-            if('start_event_default' %in% checker$prev_element)
-            {
-              branches[[j]][length(branches[[j]])+1] <- 'start_event_default'
-              f <- 1
-              break
-            }
             if(new_elements[[k]]$name %in% checker$prev_element)
             {
-              branches[[j]][length(branches[[j]])+1] <- new_elements[[k]]$name
-              checker <- new_elements[[k]]
+              if(sum(checker$prev_element %in% branches[[j]]) >= 1)
+              {
+                if(!(new_elements[[k]]$name %in% branches[[j]]))
+                {
+                  branches[[j]][length(branches[[j]])+1] <- new_elements[[k]]$name
+                  checker <- new_elements[[k]]
+                }
+              }
+              else
+              {
+                branches[[j]][length(branches[[j]])+1] <- new_elements[[k]]$name
+                checker <- new_elements[[k]]
+              }
             }
           }
         }
