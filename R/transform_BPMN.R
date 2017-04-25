@@ -371,7 +371,7 @@ transform_BPMN <- function(...)
         {
           if(sum(elements[[k]]$prev_element == l[[length(l)]]$name) == 1)
           {
-            if(elements[[k]]$type == 'XOR-join')
+            if(elements[[k]]$type == 'XOR-join' || elements[[k]]$type == 'AND-join')
             {
               continue[j] <- TRUE
               #if join is a join of another split, the prev_element of this join should be renamed to the split name.
