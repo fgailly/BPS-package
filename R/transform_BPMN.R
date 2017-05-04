@@ -399,7 +399,7 @@ transform_BPMN <- function(...)
       #XOR-structure object will replace split, all objects between split and join, join
       #as a consequence the element after the join his prev_element variable should be renamed
       if(stop_ind != 0){
-        #AND-structure object will replace split, all objects between split and join, join
+        #XOR-structure object will replace split, all objects between split and join, join
         #as a consequence the element after the join his previous element variable should be renamed
         for(j in start_ind:length(elements))
         {
@@ -432,7 +432,7 @@ transform_BPMN <- function(...)
         if(branches[[j]][[1]]$type == 'stop_event')
         {
           timeout(br, task = 0)
-          branches[[j]][[1]]$type == 'stop_event_pseudo'
+          branches[[j]][[1]]$type <- 'stop_event_pseudo'
           remove[[remove_ind]] <- branches[[j]][[1]]
           remove_ind <- remove_ind +1
         }
@@ -441,7 +441,7 @@ transform_BPMN <- function(...)
         {
           ##Add pseudo-task that has duration of 0, simmer does not accept otherwise
           timeout(br, task = 0)
-          branches[[j]][[1]]$type == 'XOR-join_pseudo'
+          branches[[j]][[1]]$type <- 'XOR-join_pseudo'
           remove[[remove_ind]] <- branches[[j]][[1]]
           remove_ind <- remove_ind +1
         }
@@ -478,7 +478,6 @@ transform_BPMN <- function(...)
             amount <- 0
             for(z in 1:length(remove))
             {
-              #ADDED
               if(remove[[z]]$type == 'inter_event')
               {
                 amount <- amount + 1
@@ -564,6 +563,21 @@ transform_BPMN <- function(...)
       #delete all elements that are in the branches of the XOR-structure and put the XOR-structure on the right place
       elements[[start_ind]] <- xorstr
       #remove contains all the elements that were placed on branches
+      j <- 1
+      while(j <= length(remove))
+      {
+        if(remove[[j]]$type == 'XOR-join_pseudo')
+        {
+          #first delete XOR-join_pseudo from the branches because you will remove the XOR-join in a next step
+          remove <- remove[(-j)]
+        }
+        if(remove[[j]]$type == 'stop_event_pseudo')
+        {
+          #rename stop_event_pseudo in remove list because otherwise it won't match with the elements list
+          remove[[j]]$type <- 'stop_event'
+        }
+        j <- j+1
+      }
       elements <- elements[!(elements %in% remove)]
       #the join object will now be right after the start_ind and can be removed as well if there is a join-index
       if(stop_ind != 0)
