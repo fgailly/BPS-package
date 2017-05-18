@@ -4,7 +4,7 @@
 #' You still need to specify the additional information: set_activity_duration(), set_resource_to_activity(), set_intermediate_event_duration(), ....
 #' As well as the simulation environment: create_arrivals() & create_resource()
 #'
-#' [tested for xml files retrieved by the signavio platform & bizagi modeller]
+#' [tested for BPMN files retrieved by the signavio platform & bizagi modeller]
 #'
 #' Requirements for the BPMN:
 #' - loops should be modelled using XOR-splits & XOR-joins
@@ -16,7 +16,7 @@
 #' @param subprocesses_included True if the linked subprocesses are included in the BPMN-xml file. False otherwise
 #' @export
 #' @import xml2
-import_XML <- function(filepath, subprocesses_included = FALSE)
+import_BPMN <- function(filepath, subprocesses_included = FALSE)
 {
   #clean xml
   test <- xml2::as_list(xml2::read_xml(filepath))

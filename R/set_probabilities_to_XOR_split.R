@@ -5,7 +5,7 @@
 #' In the case of a LOOP, this function can be used to specify the probability to continue (the probability that you don't go into the loop) by using the parameter prob_to_continue
 #' Note that this information should be added before running the transform_BPMN() function (see ?transform_BPMN())
 #'
-#' @param split The split object. Accepts a list object created with the function: add_XOR_split
+#' @param split The split object. Accepts a list object created with the add_XOR_split function OR with the import_BPMN function
 #' @param first_elements a character vector containing the name of the first element of each alternative path of the XOR-GATE structure.
 #' @param probabilities a numeric vector containing the probability of flowing through each alternative path.the sum should be equal to 1. The sequence of the branches should be identical to the sequence in the first_elements vector
 #' @param prob_to_continue a numeric between 0 and 1 indicating the probability of continuing without entering the loop.

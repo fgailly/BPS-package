@@ -17,7 +17,7 @@ add_AND_split <- function(name= '', prev_element = '')
   name <- name
   type <- 'AND-split'
   prev_element <- prev_element
-  l <- data.frame(name =name , prev_element = prev_element , type = type , number_of_branches =0, stringsAsFactors = FALSE)
+  l <- list(name =name , prev_element = prev_element , type = type , number_of_branches =0)
   class(l) <- 'bpmn_element'
   assign(name,l, pos = 1)
 }
