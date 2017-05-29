@@ -1,6 +1,6 @@
-Package: BPMNsimulator
+Package: BPS
 Type: Package
-Title: Business Process Model Notation Simulator
+Title: R Business Process Model Simulation package
 Version: 0.1
 Date: 2017-03-08
 Authors@R: person("Yoren", "Van Couwenberghe", email = "yoren_1@hotmail.com", role = c("aut", "cre"))

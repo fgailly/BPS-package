@@ -7,7 +7,7 @@
 set_resource_to_activity(activity, resource = "", amount = 1)
 }
 \arguments{
-\item{activity}{The activity a resource should be added to. Accepts a list object created with the function: add_activity}
+\item{activity}{The activity a resource should be added to. Accepts a list object created with the add_activity function OR with the import_BPMN function}
 
 \item{resource}{Specify the name of the resource type as a character variable. The same resource type should be later defined in the simulation environment (see ?create_resource())}
 

@@ -7,7 +7,7 @@
 set_intermediate_event_duration(inter_event, duration)
 }
 \arguments{
-\item{inter_event}{The intermediate_event of which the duration will be set. Accepts a list object created with the function: add_intermediate_event}
+\item{inter_event}{The intermediate_event of which the duration will be set. Accepts a list object created with the add_intermediate_event function OR with the import_BPMN function}
 
 \item{duration}{Accepts numerics and all functions returning a numeric. If the duration is negative, the absolute value will be taken}
 }

@@ -7,7 +7,7 @@
 set_activity_duration(activity, duration)
 }
 \arguments{
-\item{activity}{The activity of which the duration will be set. Accepts a list object created with the function: add_activity}
+\item{activity}{The activity of which the duration will be set. Accepts a list object created with the add_activity function OR with the import_BPMN function}
 
 \item{duration}{Accepts numerics and all functions returning a numeric. If the duration is negative, the absolute value will be taken}
 }
