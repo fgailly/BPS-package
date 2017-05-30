@@ -8,5 +8,5 @@ Description: Package that builds on the simmer-package. Helpful when conducting 
 License: MIT + file LICENSE
 LazyData: TRUE
 RoxygenNote: 6.0.1
-Depends: simmer(>= 3.5.1)
+Depends: simmer(>= 3.5.1), simmer.plot
 Imports: xml2, methods, sqldf
