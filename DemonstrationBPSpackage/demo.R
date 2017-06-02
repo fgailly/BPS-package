@@ -32,7 +32,7 @@ set_resource_to_activity(`AssCla`, resource = "claHandler", amount = 1)
 #Put all elements created by the import_BPMN function on a list
 bpmn_elements <- Filter(function(x) is(x, "bpmn_element"), mget(ls()))
 #Now we can use the do.call function (of base R)
-traj_acquirer <- do.call(transform_BPMN, args = bpmn_elements)
+traj_acquirer <- do.call(transform_BPS, args = bpmn_elements)
 
 ###step 4: Define the simulation environment
 #first delete simulation_environment if it already exists from a previous simulation

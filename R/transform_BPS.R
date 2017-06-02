@@ -9,7 +9,7 @@
 #' @return A trajectory environment of the simmer package
 #' @import simmer
 #' @import methods
-transform_BPMN <- function(...)
+transform_BPS <- function(...)
 {
   elements <- list(...)
   #check whether all arguments provided to the function are created by our package functions
