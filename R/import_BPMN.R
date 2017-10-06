@@ -23,6 +23,7 @@ import_BPMN <- function(filepath, subprocesses_included = FALSE)
   test <- test$process
   elements <- list()
   unique_names <- c()
+  process <-list()
   #Create list object storing critical information about the trajectory flow
   #delete BPMN elements that do not provide information for simulation (e.g. data Objects, pools/lanes)
   #throw error when BPMN elements are used that are not supported by our package (OR-GATES, event Based gates)
@@ -716,19 +717,22 @@ import_BPMN <- function(filepath, subprocesses_included = FALSE)
       }
     }
   }
+
   for(i in 1:length(new_elements))
   {
+
     if(new_elements[[i]]$type == 'activity')
     {
-      add_activity(name = new_elements[[i]]$name, prev_element = new_elements[[i]]$prev_element)
+      process<- add_activity(process, name = new_elements[[i]]$name, prev_element = new_elements[[i]]$prev_element)
+
     }
     else if(new_elements[[i]]$type == 'inter_event')
     {
-      add_intermediate_event(name = new_elements[[i]]$name, prev_element = new_elements[[i]]$prev_element)
+      process <- add_intermediate_event(process, name = new_elements[[i]]$name, prev_element = new_elements[[i]]$prev_element)
     }
     else if(new_elements[[i]]$type == 'XOR-split' || new_elements[[i]]$type == 'loop-split')
     {
-      add_XOR_split(name = new_elements[[i]]$name, prev_element = new_elements[[i]]$prev_element)
+      process <- add_XOR_split(process, name = new_elements[[i]]$name, prev_element = new_elements[[i]]$prev_element)
     }
     else if(new_elements[[i]]$type == 'AND-split')
     {
@@ -746,5 +750,8 @@ import_BPMN <- function(filepath, subprocesses_included = FALSE)
     {
       add_stop_event(name = new_elements[[i]]$name, prev_element = new_elements[[i]]$prev_element)
     }
+
   }
+  return(process)
+
 }

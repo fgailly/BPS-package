@@ -1,25 +1,25 @@
 rm(list = ls())
 library('BPS')
 ###step 1: Import BPMN model
-import_BPMN(filepath = 'processmodel/bps_demo_2.bpmn.xml')
+process <- import_BPMN(filepath = 'DemonstrationBPSpackage/processmodel/bps_demo_2.bpmn.xml')
 ###step 2: Add additional information not available in a BPMN
 #ACTIVITY DURATIONS
-set_activity_duration(`CheckCust1`, duration = function() rexp(1, rate= 1/1))
-set_activity_duration(`CheckCust2`, duration = function() rexp(1, rate= 1/1))
-set_activity_duration(`RegCla1`, duration = function() rexp(1, rate = 1/9))
-set_activity_duration(`RegCla2`, duration = function() rexp(1, rate = 1/9))
-set_activity_duration(`DetLikeCla`, duration = function() rexp(1, rate = 1/2))
-set_activity_duration(`AssCla`, duration = function() rexp(1, rate = 1/20))
-set_activity_duration(`InPay`, duration = function() rexp(1, rate = 1/2))
-set_activity_duration(`AdvClaimant`, duration = function() rexp(1,rate = 1/4))
-set_activity_duration(`CloCla`, duration = function() rexp(1,rate = 1/1))
+process <- set_activity_duration(process,"CheckCust1", duration = function() rexp(1, rate= 1/1))
+process <- set_activity_duration(process,"CheckCust2", duration = function() rexp(1, rate= 1/1))
+process <- set_activity_duration(process,"RegCla1", duration = function() rexp(1, rate = 1/9))
+process <- set_activity_duration(process,"RegCla2", duration = function() rexp(1, rate = 1/9))
+process <-set_activity_duration(process,"DetLikeCla", duration = function() rexp(1, rate = 1/2))
+process <- set_activity_duration(process,"AssCla", duration = function() rexp(1, rate = 1/20))
+process <- set_activity_duration(process,"InPay", duration = function() rexp(1, rate = 1/2))
+process <- set_activity_duration(process,"AdvClaimant", duration = function() rexp(1,rate = 1/4))
+process <- set_activity_duration(process,"CloCla", duration = function() rexp(1,rate = 1/1))
 
 #PROBABILITIES TO XOR-SPLIT
 #Comment: no need to set probabilities if probability is equal between branches (this is the default)
-set_probabilities_to_XOR_split(`InfoCompl1GW`, first_elements = c("CallEnd1", "RegCla1"), probabilities = c(0.1,0.9))
-set_probabilities_to_XOR_split(`InfoCompl2GW`, first_elements = c("CallEnd2", "RegCla2"), probabilities = c(0.1,0.9))
-set_probabilities_to_XOR_split(`LiableGW`, first_elements = c("CaClo", "AssCla"), probabilities = c(0.15,0.85))
-set_probabilities_to_XOR_split(`ClaRejGW`, first_elements = c("ClaRej", "default_gateway_3"), probabilities = c(0.2,0.8))
+process <- set_probabilities_to_XOR_split(process, "InfoCompl1GW", first_elements = c("CallEnd1", "RegCla1"), probabilities = c(0.1,0.9))
+process <- set_probabilities_to_XOR_split(process, "InfoCompl2GW", first_elements = c("CallEnd2", "RegCla2"), probabilities = c(0.1,0.9))
+process <- set_probabilities_to_XOR_split(process, "LiableGW", first_elements = c("CaClo", "AssCla"), probabilities = c(0.15,0.85))
+process <- set_probabilities_to_XOR_split(process, "ClaRejGW", first_elements = c("ClaRej", "default_gateway_3"), probabilities = c(0.2,0.8))
 
 #RESOURCES RESPONSIBLE FOR ACTIVITY
 set_resource_to_activity(`CheckCust1`, resource = "op_CC1", amount = 1)

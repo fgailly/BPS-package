@@ -5,14 +5,15 @@
 #' In the case of a LOOP, this function can be used to specify the probability to continue (the probability that you don't go into the loop) by using the parameter prob_to_continue
 #' Note that this information should be added before running the transform_BPMN() function (see ?transform_BPMN())
 #'
+#' @param process processmodel
 #' @param split The split object. Accepts a list object created with the add_XOR_split function OR with the import_BPMN function
 #' @param first_elements a character vector containing the name of the first element of each alternative path of the XOR-GATE structure.
 #' @param probabilities a numeric vector containing the probability of flowing through each alternative path.the sum should be equal to 1. The sequence of the branches should be identical to the sequence in the first_elements vector
 #' @param prob_to_continue a numeric between 0 and 1 indicating the probability of continuing without entering the loop.
 #' @export
-set_probabilities_to_XOR_split <- function(split, first_elements = c(), probabilities = c(), prob_to_continue = 0)
+set_probabilities_to_XOR_split <- function(process, split, first_elements = c(), probabilities = c(), prob_to_continue = 0)
 {
-  if(!is.list(split) || split$type != 'XOR-split') stop("split was not defined by the Add_XOR-split()-function")
+  if(!(split %in% names(process)) || process[[split]]$type != 'XOR-split') stop("split was not defined by the Add_XOR-split()-function")
   if(!missing(first_elements))
   {
     if(!is.character(first_elements)) stop("first_elements should be a character vector")
@@ -26,10 +27,9 @@ set_probabilities_to_XOR_split <- function(split, first_elements = c(), probabil
     if(!is.numeric(prob_to_continue)) stop("prob_to_continue should be a numeric")
     if(prob_to_continue > 1 || prob_to_continue < 0) stop("prob_to_continue should be between 0 and 1")
   }
-  name <- split$name
-  split$first_activities <- first_elements
-  split$probabilities <- probabilities
-  split$prob_to_continue <- prob_to_continue
-  assign(name, split, pos = 1)
+  process[[split]]$first_activities <- first_elements
+  process[[split]]$probabilities <- probabilities
+  process[[split]]$prob_to_continue <- prob_to_continue
+  return(process)
 }
 
