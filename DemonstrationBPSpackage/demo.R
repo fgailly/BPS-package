@@ -8,7 +8,7 @@ process <- set_activity_duration(process,"CheckCust1", duration = function() rex
 process <- set_activity_duration(process,"CheckCust2", duration = function() rexp(1, rate= 1/1))
 process <- set_activity_duration(process,"RegCla1", duration = function() rexp(1, rate = 1/9))
 process <- set_activity_duration(process,"RegCla2", duration = function() rexp(1, rate = 1/9))
-process <-set_activity_duration(process,"DetLikeCla", duration = function() rexp(1, rate = 1/2))
+process <- set_activity_duration(process,"DetLikeCla", duration = function() rexp(1, rate = 1/2))
 process <- set_activity_duration(process,"AssCla", duration = function() rexp(1, rate = 1/20))
 process <- set_activity_duration(process,"InPay", duration = function() rexp(1, rate = 1/2))
 process <- set_activity_duration(process,"AdvClaimant", duration = function() rexp(1,rate = 1/4))
@@ -22,12 +22,12 @@ process <- set_probabilities_to_XOR_split(process, "LiableGW", first_elements = 
 process <- set_probabilities_to_XOR_split(process, "ClaRejGW", first_elements = c("ClaRej", "default_gateway_3"), probabilities = c(0.2,0.8))
 
 #RESOURCES RESPONSIBLE FOR ACTIVITY
-set_resource_to_activity(`CheckCust1`, resource = "op_CC1", amount = 1)
-set_resource_to_activity(`CheckCust2`, resource = "op_CC2", amount = 1)
-set_resource_to_activity(`RegCla1`, resource = "op_CC1", amount = 1)
-set_resource_to_activity(`RegCla2`, resource = "op_CC2", amount = 1)
-set_resource_to_activity(`DetLikeCla`, resource = "claHandler", amount = 1)
-set_resource_to_activity(`AssCla`, resource = "claHandler", amount = 1)
+process <- set_resource_to_activity(process, "CheckCust1", resource = "op_CC1", amount = 1)
+process <- set_resource_to_activity(process, "CheckCust2", resource = "op_CC2", amount = 1)
+process <- set_resource_to_activity(process, "RegCla1", resource = "op_CC1", amount = 1)
+process <- set_resource_to_activity(process, "RegCla2", resource = "op_CC2", amount = 1)
+process <- set_resource_to_activity(process, "DetLikeCla", resource = "claHandler", amount = 1)
+process <- set_resource_to_activity(process, "AssCla", resource = "claHandler", amount = 1)
 ###step 3: Create the simmer-trajectory object
 #Put all elements created by the import_BPMN function on a list
 bpmn_elements <- Filter(function(x) is(x, "bpmn_element"), mget(ls()))
