@@ -736,19 +736,19 @@ import_BPMN <- function(filepath, subprocesses_included = FALSE)
     }
     else if(new_elements[[i]]$type == 'AND-split')
     {
-      add_AND_split(name = new_elements[[i]]$name, prev_element = new_elements[[i]]$prev_element)
+      process <- add_AND_split(process, name = new_elements[[i]]$name, prev_element = new_elements[[i]]$prev_element)
     }
     else if(new_elements[[i]]$type == 'XOR-join' || new_elements[[i]]$type == 'loop-join')
     {
-      add_XOR_join(name = new_elements[[i]]$name, prev_element = new_elements[[i]]$prev_element,  of_split = new_elements[[i]]$of_split)
+      process <- add_XOR_join(process, name = new_elements[[i]]$name, prev_element = new_elements[[i]]$prev_element,  of_split = new_elements[[i]]$of_split)
     }
     else if(new_elements[[i]]$type == 'AND-join')
     {
-      add_AND_join(name = new_elements[[i]]$name, prev_element = new_elements[[i]]$prev_element,  of_split = new_elements[[i]]$of_split)
+      process <- add_AND_join(process, name = new_elements[[i]]$name, prev_element = new_elements[[i]]$prev_element,  of_split = new_elements[[i]]$of_split)
     }
     else if(new_elements[[i]]$type =='stop_event')
     {
-      add_stop_event(name = new_elements[[i]]$name, prev_element = new_elements[[i]]$prev_element)
+      process <- add_stop_event(process, name = new_elements[[i]]$name, prev_element = new_elements[[i]]$prev_element)
     }
 
   }

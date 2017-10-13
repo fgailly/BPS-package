@@ -14,12 +14,12 @@ transform_BPS <- function(...)
   elements <- list(...)
   #check whether all arguments provided to the function are created by our package functions
   #when they are checked, romve arguments from global environment, the ensure that these functions are rerunned before running Create_BPMN
-  for(i in 1:length(elements))
-  {
-    if(!methods::is(elements[[i]], "bpmn_element") )
-    {stop("Not all arguments were created by the Add_activity(), Add_XOR_split(), Add_AND_split(), Add_XOR_join() or Add_AND_join() functions")}
-    rm(list = elements[[i]]$name, envir = globalenv())
-  }
+  #for(i in 1:length(elements))
+  #{
+  #  if(!methods::is(elements[[i]], "bpmn_element") )
+  #  {stop("Not all arguments were created by the Add_activity(), Add_XOR_split(), Add_AND_split(), Add_XOR_join() or Add_AND_join() functions")}
+  #  rm(list = elements[[i]]$name, envir = globalenv())
+  #}
   #Sort the elements based on the prev_element variable
   i <- 1
   while(i <= length(elements))
@@ -54,7 +54,7 @@ transform_BPS <- function(...)
   checked <- character()
   while(i >= 1)
   {
-    if((elements[[i]]$type == 'AND-split' || elements[[i]]$type == 'XOR-split') && !(elements[[i]]$name %in% checked) )
+    if((elements[[i]]$type == "AND-split" || elements[[i]]$type == "XOR-split") && !(elements[[i]]$name %in% checked) )
     {
       pos_split <- i
       j <- i+1
@@ -173,13 +173,14 @@ transform_BPS <- function(...)
   i <- length(elements)
   while(i > 0)
   {
-    if (elements[[i]]$type == 'AND-split')
+    if (elements[[i]]$type == "AND-split")
     {
       #determine start and stop index of the gate structure
       start_ind <- i
+
       for (j in i:length(elements))
       {
-        if(elements[[j]]$type== 'AND-join')
+        if(elements[[j]]$type== "AND-join")
         {
           if(elements[[j]]$of_split == elements[[i]]$name)
           {
@@ -236,7 +237,7 @@ transform_BPS <- function(...)
         branches[[j]] <- l
       }
       #create simmer trajectory object storing the trajectory of the AND-structure
-      t0 <- create_trajectory()
+      t0 <- trajectory()
       #define branches in simmer package
       #loop through number of branches
       arguments <- list()
@@ -244,23 +245,24 @@ transform_BPS <- function(...)
       arguments[[2]] <- df$nmbr_of_branches
       for(j in 1:length(branches))
       {
-        br <- create_trajectory()
+        br <- trajectory()
         #loop through selected branch
         for(k in 1:length(branches[[j]]))
         {
           #ADDED
-          if(branches[[j]][[k]]$type == 'inter_event')
+          if(branches[[j]][[k]]$type == "inter_event")
           {
             timeout(br, task = branches[[j]][[k]]$task)
           }
-          if(branches[[j]][[k]]$type == 'activity')
+          if(branches[[j]][[k]]$type == "activity")
           {
-            if(branches[[j]][[k]]$resource == 'N/A')
+            if(branches[[j]][[k]]$resource == "N/A")
             {
               timeout(br, task = branches[[j]][[k]]$task)
             }
             else
             {
+              print("test" + branches[[j]][[k]]$resource)
               seize(br, resource = branches[[j]][[k]]$resource, amount = as.integer(branches[[j]][[k]]$nmbr_resources))
               timeout(br, task = branches[[j]][[k]]$task)
               release(br, resource = branches[[j]][[k]]$resource, amount = as.integer(branches[[j]][[k]]$nmbr_resources))
@@ -284,7 +286,7 @@ transform_BPS <- function(...)
       elements[[start_ind]] <- andstr
       elements <- elements[-((start_ind+1):stop_ind)]
     }
-    if (elements[[i]]$type == 'XOR-split')
+    if (elements[[i]]$type == "XOR-split")
     {
       #determine start and stop index
       #XOR-gate structure can have no join element and as consequence no stop_index, will then be zero
@@ -415,7 +417,7 @@ transform_BPS <- function(...)
         }
       }
       #create simmer trajectory object storing the trajectory of the XOR-structure
-      t0 <- create_trajectory()
+      t0 <- trajectory()
       #define branches in simmer package
       #loop through number of branches
       #store in the remove list the elements that were put on a branch to remove from elements list later
@@ -427,7 +429,7 @@ transform_BPS <- function(...)
       arguments[[3]] <- continue
       for(j in 1:length(branches))
       {
-        br <- create_trajectory()
+        br <- trajectory()
         #If branch goes directly to stop_event, Add pseudo-task that has duration of 0, simmer does not accept otherwise
         if(branches[[j]][[1]]$type == 'stop_event')
         {
@@ -588,7 +590,7 @@ transform_BPS <- function(...)
     i <- i-1
   }
   #Create full trajectory
-  t1 <- create_trajectory(name='final_traj')
+  t1 <- trajectory(name='final_traj')
   for(i in 1:length(elements))
   {
     #ADDED
@@ -604,6 +606,8 @@ transform_BPS <- function(...)
       }
       else
       {
+        #log_(t1, elements[[i]]$name)
+        #cat(log_(t1, elements[[i]]$name),file="outfile.txt",sep="\n", append = TRUE)
         seize(t1, resource = elements[[i]]$resource, amount = as.integer(elements[[i]]$nmbr_resources))
         timeout(t1, task = elements[[i]]$task)
         release(t1, resource = elements[[i]]$resource, amount = as.integer(elements[[i]]$nmbr_resources))

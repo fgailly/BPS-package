@@ -3,10 +3,12 @@
 #' Creates a list in the global environment storing the information of the AND-split.
 #' The name of the list will be the name argument of the function.
 #' The list will have a custom class: bpmn_element
+#' @param process the process model
 #' @param name character variable containing the name of the split
 #' @param prev_element character variable containing the name of the previous element in the BPMN
+#' @return the process model
 #' @export
-add_AND_split <- function(name= '', prev_element = '')
+add_AND_split <- function(process, name= '', prev_element = '')
 {
   if(!is.character(name)) stop("name is not of the character type")
   if(!is.character(prev_element)) stop("prev_element is not of the character type")
@@ -19,5 +21,6 @@ add_AND_split <- function(name= '', prev_element = '')
   prev_element <- prev_element
   l <- list(name =name , prev_element = prev_element , type = type , number_of_branches =0)
   class(l) <- 'bpmn_element'
-  assign(name,l, pos = 1)
+  process[[name]] <-l
+  return(process)
 }

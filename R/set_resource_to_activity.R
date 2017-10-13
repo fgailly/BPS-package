@@ -15,7 +15,7 @@ set_resource_to_activity <- function(process, activity, resource = '', amount= 1
   if(!is.character(resource)) stop("resource is not of the character type")
   if(!is.numeric(amount) || as.integer(amount) != amount || amount < 0) stop("amount is not a positive integer")
   process[[activity]]$resource <-resource
-  process[[activity]]$resource <- amount
+  process[[activity]]$amount <- amount
   return(process)
 }
 
