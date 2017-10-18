@@ -5,39 +5,32 @@
 #' The simulation will only run when all resources defined by the function add_resource_to_activity, are also defined in the simulation environment
 #' (see ?add_resource_to_activity)
 #'
+#' @param process_sim_model Process simulation model met simmer traj en simmer simmulation environment
 #' @param resource Character variable containing the name of the resource-type.
 #' @param capacity Number of resources present in the simulation environment.
 #' @param schedule Can be used to define work schedules for resources, when present the capacity parameter will be ignored.Accepts schedules created by the schedule()-function of the simmer-package (see ?schedule())
 #' @param max_queue_size Can be used to identify when the queue_size of a resource is limited. Instances arriving at the queue when the queue_size is at its maximal queue size will leave the system without finishing it.
+#' @return Process simulation model met simmer traj en simmer simmulation environment
 #' @export
 
-create_resource <- function(resource = '', capacity = 1, max_queue_size = Inf, schedule)
+create_resource <- function(process_sim_model, resource = '', capacity = 1, max_queue_size = Inf, schedule)
 {
   if(!is.character(resource)) stop("resource is not of the character type")
   if(!is.numeric(capacity) || as.integer(capacity) != capacity || capacity < 0) stop("capacity is not a positive integer")
-  if(missing(schedule))
+  if(!missing(schedule))
   {
-    if (exists('simulation_environment') && now(simulation_environment) == 0)
+    if (!is.null(process_sim_model[["sim_env"]]))
     {
-      add_resource(simulation_environment, name = resource, capacity = capacity, queue_size = max_queue_size)
+      add_resource(process_sim_model$sim_env, name = resource, capacity = capacity, queue_size = max_queue_size)
     }
     else
     {
-      simulation_environment <<- simmer(name = 'simulation_environment') %>%
-        add_resource(name = resource, capacity = capacity, queue_size = max_queue_size)
+      stop("Simulation environment does not exist")
     }
   }
   else
   {
-    if(!is.environment(schedule)) stop("schedule parameter should be created by the schedule()-function")
-    if (exists('simulation_environment') && now(simulation_environment) == 0)
-    {
-      add_resource(simulation_environment, name = resource, schedule, queue_size = max_queue_size)
-    }
-    else
-    {
-      simulation_environment <<- simmer(name = 'simulation_environment') %>%
-        add_resource(name = resource, schedule, queue_size = max_queue_size)
-    }
+    stop("schedule parameter should be created by the schedule()-function")
   }
+  return(process_sim_model)
 }

@@ -5,21 +5,22 @@
 #' (see ?transform_BPMN()).
 #'
 #'
-#' @param to_trajectory Specify to which trajectory the interarrival_time is added.Accepts a trajectory environment created by the transform_BPMN()-function or created with the simmer-package.
+#' @param processsimmodel Specify to which trajectory the interarrival_time is added.Accepts a trajectory environment created by the transform_BPMN()-function or created with the simmer-package.
 #' @param interarrival_time Accepts only functions that return numerics. If the functions returns a negative value the simulation is stopped.
+#' @return a process simulation model
 #' @export
-create_arrivals <- function(to_trajectory, interarrival_time)
+create_arrivals <- function(processsimmodel, interarrival_time)
 {
   if(!is.function(interarrival_time)) stop("interarrival_time should be a function")
-  name_pr <- deparse(substitute(to_trajectory))
-  if (exists('simulation_environment') && now(simulation_environment) == 0)
+  name_pr <- deparse(substitute(processsimmodel$traj))
+  if (!is.null(processsimmodel[["sim_env"]]))
   {
-    add_generator(simulation_environment, name_prefix = name_pr, trajectory = to_trajectory, distribution = interarrival_time)
+    add_generator(processsimmodel$sim_env, name_prefix = name_pr, trajectory = processsimmodel$traj, distribution = interarrival_time)
+    return(processsimmodel)
   }
   else
   {
-    simulation_environment <<- simmer(name = 'simulation_environment') %>%
-      add_generator(name_prefix = name_pr, trajectory = to_trajectory, distribution = interarrival_time)
+    stop("Simulation environment does not exist")
   }
 }
 

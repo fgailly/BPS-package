@@ -1,56 +1,56 @@
 rm(list = ls())
 library('BPS')
 ###step 1: Import BPMN model
-process <- import_BPMN(filepath = 'DemonstrationBPSpackage/processmodel/bps_demo_2.bpmn.xml')
+processmodel <- import_BPMN(filepath = 'DemonstrationBPSpackage/processmodel/bps_demo_2.bpmn.xml')
 ###step 2: Add additional information not available in a BPMN
 #ACTIVITY DURATIONS
-process <- set_activity_duration(process,"CheckCust1", duration = function() rexp(1, rate= 1/1))
-process <- set_activity_duration(process,"CheckCust2", duration = function() rexp(1, rate= 1/1))
-process <- set_activity_duration(process,"RegCla1", duration = function() rexp(1, rate = 1/9))
-process <- set_activity_duration(process,"RegCla2", duration = function() rexp(1, rate = 1/9))
-process <- set_activity_duration(process,"DetLikeCla", duration = function() rexp(1, rate = 1/2))
-process <- set_activity_duration(process,"AssCla", duration = function() rexp(1, rate = 1/20))
-process <- set_activity_duration(process,"InPay", duration = function() rexp(1, rate = 1/2))
-process <- set_activity_duration(process,"AdvClaimant", duration = function() rexp(1,rate = 1/4))
-process <- set_activity_duration(process,"CloCla", duration = function() rexp(1,rate = 1/1))
+processmodel <- set_activity_duration(processmodel,"CheckCust1", duration = function() rexp(1, rate= 1/1))
+processmodel <- set_activity_duration(processmodel,"CheckCust2", duration = function() rexp(1, rate= 1/1))
+processmodel <- set_activity_duration(processmodel,"RegCla1", duration = function() rexp(1, rate = 1/9))
+processmodel <- set_activity_duration(processmodel,"RegCla2", duration = function() rexp(1, rate = 1/9))
+processmodel <- set_activity_duration(processmodel,"DetLikeCla", duration = function() rexp(1, rate = 1/2))
+processmodel <- set_activity_duration(processmodel,"AssCla", duration = function() rexp(1, rate = 1/20))
+processmodel <- set_activity_duration(processmodel,"InPay", duration = function() rexp(1, rate = 1/2))
+processmodel <- set_activity_duration(processmodel,"AdvClaimant", duration = function() rexp(1,rate = 1/4))
+processmodel <- set_activity_duration(processmodel,"CloCla", duration = function() rexp(1,rate = 1/1))
 
 #PROBABILITIES TO XOR-SPLIT
 #Comment: no need to set probabilities if probability is equal between branches (this is the default)
-process <- set_probabilities_to_XOR_split(process, "InfoCompl1GW", first_elements = c("CallEnd1", "RegCla1"), probabilities = c(0.1,0.9))
-process <- set_probabilities_to_XOR_split(process, "InfoCompl2GW", first_elements = c("CallEnd2", "RegCla2"), probabilities = c(0.1,0.9))
-process <- set_probabilities_to_XOR_split(process, "LiableGW", first_elements = c("CaClo", "AssCla"), probabilities = c(0.15,0.85))
-process <- set_probabilities_to_XOR_split(process, "ClaRejGW", first_elements = c("ClaRej", "default_gateway_3"), probabilities = c(0.2,0.8))
+processmodel <- set_probabilities_to_XOR_split(processmodel, "InfoCompl1GW", first_elements = c("CallEnd1", "RegCla1"), probabilities = c(0.1,0.9))
+processmodel <- set_probabilities_to_XOR_split(processmodel, "InfoCompl2GW", first_elements = c("CallEnd2", "RegCla2"), probabilities = c(0.1,0.9))
+processmodel <- set_probabilities_to_XOR_split(processmodel, "LiableGW", first_elements = c("CaClo", "AssCla"), probabilities = c(0.15,0.85))
+processmodel <- set_probabilities_to_XOR_split(processmodel, "ClaRejGW", first_elements = c("ClaRej", "default_gateway_3"), probabilities = c(0.2,0.8))
 
 #RESOURCES RESPONSIBLE FOR ACTIVITY
-process <- set_resource_to_activity(process, "CheckCust1", resource = "op_CC1", amount = 1)
-process <- set_resource_to_activity(process, "CheckCust2", resource = "op_CC2", amount = 1)
-process <- set_resource_to_activity(process, "RegCla1", resource = "op_CC1", amount = 1)
-process <- set_resource_to_activity(process, "RegCla2", resource = "op_CC2", amount = 1)
-process <- set_resource_to_activity(process, "DetLikeCla", resource = "claHandler", amount = 1)
-process <- set_resource_to_activity(process, "AssCla", resource = "claHandler", amount = 1)
-###step 3: Create the simmer-trajectory object
-#Put all elements created by the import_BPMN function on a list
-bpmn_elements <- Filter(function(x) is(x, "bpmn_element"), mget(ls()))
+processmodel <- set_resource_to_activity(processmodel, "CheckCust1", resource = "op_CC1", amount = 1)
+processmodel <- set_resource_to_activity(processmodel, "CheckCust2", resource = "op_CC2", amount = 1)
+processmodel <- set_resource_to_activity(processmodel, "RegCla1", resource = "op_CC1", amount = 1)
+processmodel <- set_resource_to_activity(processmodel, "RegCla2", resource = "op_CC2", amount = 1)
+processmodel <- set_resource_to_activity(processmodel, "DetLikeCla", resource = "claHandler", amount = 1)
+processmodel <- set_resource_to_activity(process, "AssCla", resource = "claHandler", amount = 1)
+
+###step 3: Create the process model simulation object
+
 #Now we can use the do.call function (of base R)
-traj_acquirer <- do.call(transform_BPS, args = process)
+processimulationmodel <- do.call(transform_BPS, args = processmodel)
 
 ###step 4: Define the simulation environment
 #first delete simulation_environment if it already exists from a previous simulation
-rm(simulation_environment)
-create_arrivals(traj_acquirer, function() sample(x=c(0.1,0.3,0.8), size = 1))
+
+processimulationmodel <- create_arrivals(processimulationmodel, function() sample(x=c(0.1,0.3,0.8), size = 1))
 
 ##RESOURCES AVAILABLE
 
 sched_CallCentre <- schedule(c(0, 240, 480), c(40, 55, 25), period=720)
 sched_Claimhandler <- schedule(c(0, 480), c(150,0), period=720)
 
-create_resource(resource = "op_CC1", schedule = sched_CallCentre)
-create_resource(resource = "op_CC2", schedule = sched_CallCentre)
-create_resource(resource = "claHandler", schedule = sched_Claimhandler)
+processimulationmodel <- create_resource(processimulationmodel, resource = "op_CC1", schedule = sched_CallCentre)
+processimulationmodel <- create_resource(processimulationmodel, resource = "op_CC2", schedule = sched_CallCentre)
+processimulationmodel <- create_resource(processimulationmodel, resource = "claHandler", schedule = sched_Claimhandler)
 
 ###step 5: run the simulation (using simmer package functions)
 #run for 1 week: 5 days of 12 hours ==> run for 3600 minutes
-run(simulation_environment, until = 3601)
+run(processimulationmodel$sim_env, until = 3601)
 ###step 6: retrieve results (using simmer package functions)
 ##dataframe containing information about arrivals
 arrivals <- get_mon_arrivals(simulation_environment)
