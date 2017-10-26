@@ -9,6 +9,7 @@
 #' @return Process Simulationmodel which containt a simmer trajectory object and a corresponding simulation environment
 #' @import simmer
 #' @import methods
+#'
 transform_BPS <- function(...)
 {
   elements <- list(...)
@@ -259,6 +260,7 @@ transform_BPS <- function(...)
             if(branches[[j]][[k]]$resource == "N/A")
             {
               timeout(br, task = branches[[j]][[k]]$task)
+
             }
             else
             {
@@ -603,6 +605,7 @@ transform_BPS <- function(...)
       if(elements[[i]]$resource == 'N/A')
       {
         timeout(t1, task = elements[[i]]$task)
+        set_attribute(t1, elements[[i]]$name, 000)
       }
       else
       {
@@ -610,6 +613,8 @@ transform_BPS <- function(...)
         #cat(log_(t1, elements[[i]]$name),file="outfile.txt",sep="\n", append = TRUE)
         seize(t1, resource = elements[[i]]$resource, amount = as.integer(elements[[i]]$nmbr_resources))
         timeout(t1, task = elements[[i]]$task)
+        set_attribute(t1, elements[[i]]$name, 000)
+        set_attribute(t1, elements[[i]]$resource, 000)
         release(t1, resource = elements[[i]]$resource, amount = as.integer(elements[[i]]$nmbr_resources))
       }
     }

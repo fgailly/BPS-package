@@ -27,15 +27,14 @@ processmodel <- set_resource_to_activity(processmodel, "CheckCust2", resource = 
 processmodel <- set_resource_to_activity(processmodel, "RegCla1", resource = "op_CC1", amount = 1)
 processmodel <- set_resource_to_activity(processmodel, "RegCla2", resource = "op_CC2", amount = 1)
 processmodel <- set_resource_to_activity(processmodel, "DetLikeCla", resource = "claHandler", amount = 1)
-processmodel <- set_resource_to_activity(process, "AssCla", resource = "claHandler", amount = 1)
+processmodel <- set_resource_to_activity(processmodel, "AssCla", resource = "claHandler", amount = 1)
 
 ###step 3: Create the process model simulation object
 
 #Now we can use the do.call function (of base R)
 processimulationmodel <- do.call(transform_BPS, args = processmodel)
 
-###step 4: Define the simulation environment
-#first delete simulation_environment if it already exists from a previous simulation
+##Arrival rate
 
 processimulationmodel <- create_arrivals(processimulationmodel, function() sample(x=c(0.1,0.3,0.8), size = 1))
 
@@ -48,12 +47,12 @@ processimulationmodel <- create_resource(processimulationmodel, resource = "op_C
 processimulationmodel <- create_resource(processimulationmodel, resource = "op_CC2", schedule = sched_CallCentre)
 processimulationmodel <- create_resource(processimulationmodel, resource = "claHandler", schedule = sched_Claimhandler)
 
-###step 5: run the simulation (using simmer package functions)
+###step 4: run the simulation (using simmer package functions)
 #run for 1 week: 5 days of 12 hours ==> run for 3600 minutes
 run(processimulationmodel$sim_env, until = 3601)
-###step 6: retrieve results (using simmer package functions)
+###step 5: retrieve results (using simmer package functions)
 ##dataframe containing information about arrivals
-arrivals <- get_mon_arrivals(simulation_environment)
+arrivals <- get_mon_arrivals(processimulationmodel$sim_env)
 transf <- transform_get_mon_arrivals(arrivals)
 #calculate waiting time
 #waiting_time = (end_time - start_time) - activity_time
@@ -62,8 +61,8 @@ transf$waiting_time = (transf$end_time - transf$start_time) - transf$activity_ti
 mean(transf$waiting_time) #62.73 minutes
 mean(transf$activity_time) #23.61 minutes
 ##dataframe containing information about resources
-resources <- get_mon_resources(simulation_environment)
+resources <- get_mon_resources(processimulationmodel$sim_env)
 ##plots containing information
-plot(simulation_environment, what="resources", metric="usage", "op_CC1")
-plot(simulation_environment, what="resources", metric="utilization", "op_CC1")
-plot(simulation_environment, what="arrivals", metric="flow_time")
+plot(processimulationmodel$sim_env, what="resources", metric="usage", "op_CC1")
+plot(processimulationmodel$sim_env, what="resources", metric="utilization", "op_CC1")
+plot(processimulationmodel$sim_env, what="arrivals", metric="flow_time")

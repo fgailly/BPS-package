@@ -15,7 +15,7 @@ create_arrivals <- function(processsimmodel, interarrival_time)
   name_pr <- deparse(substitute(processsimmodel$traj))
   if (!is.null(processsimmodel[["sim_env"]]))
   {
-    add_generator(processsimmodel$sim_env, name_prefix = name_pr, trajectory = processsimmodel$traj, distribution = interarrival_time)
+    add_generator(processsimmodel$sim_env, name_prefix = name_pr, trajectory = processsimmodel$traj, distribution = interarrival_time, mon = 2)
     return(processsimmodel)
   }
   else
