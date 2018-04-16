@@ -10,7 +10,7 @@ transform_BPS(...)
 \item{...}{include as seperate arguments all lists describing the elements of your BPMN (they can be specified in a random order). Accepts lists created by the functions: add_activity, add_XOR_split, add_AND_split, add_XOR_join, add_AND_Join, add_intermediate_event}
 }
 \value{
-A trajectory environment of the simmer package
+Process Simulationmodel which containt a simmer trajectory object and a corresponding simulation environment
 }
 \description{
 The function returns a trajectory environment of the simmer package.

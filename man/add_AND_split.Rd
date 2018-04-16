@@ -4,12 +4,17 @@
 \alias{add_AND_split}
 \title{Add a BPMN AND-split element}
 \usage{
-add_AND_split(name = "", prev_element = "")
+add_AND_split(process, name = "", prev_element = "")
 }
 \arguments{
+\item{process}{the process model}
+
 \item{name}{character variable containing the name of the split}
 
 \item{prev_element}{character variable containing the name of the previous element in the BPMN}
+}
+\value{
+the process model
 }
 \description{
 Creates a list in the global environment storing the information of the AND-split.

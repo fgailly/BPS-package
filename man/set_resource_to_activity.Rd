@@ -4,14 +4,19 @@
 \alias{set_resource_to_activity}
 \title{Specify which resource is responsible for executing an activity}
 \usage{
-set_resource_to_activity(activity, resource = "", amount = 1)
+set_resource_to_activity(processmodel, activity, resource = "", amount = 1)
 }
 \arguments{
+\item{processmodel}{The processmodel}
+
 \item{activity}{The activity a resource should be added to. Accepts a list object created with the add_activity function OR with the import_BPMN function}
 
 \item{resource}{Specify the name of the resource type as a character variable. The same resource type should be later defined in the simulation environment (see ?create_resource())}
 
 \item{amount}{Can be used to indicate that more than 1 instance of the resource type is needed to execute an activity.}
+}
+\value{
+process model
 }
 \description{
 Specify which resource is responsible for executing an activity

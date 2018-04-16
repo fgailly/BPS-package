@@ -4,10 +4,12 @@
 \alias{create_resource}
 \title{Adding resources to a simulation}
 \usage{
-create_resource(resource = "", capacity = 1, max_queue_size = Inf,
-  schedule)
+create_resource(process_sim_model, resource = "", capacity = 1,
+  max_queue_size = Inf, schedule)
 }
 \arguments{
+\item{process_sim_model}{Process simulation model met simmer traj en simmer simmulation environment}
+
 \item{resource}{Character variable containing the name of the resource-type.}
 
 \item{capacity}{Number of resources present in the simulation environment.}
@@ -15,6 +17,9 @@ create_resource(resource = "", capacity = 1, max_queue_size = Inf,
 \item{max_queue_size}{Can be used to identify when the queue_size of a resource is limited. Instances arriving at the queue when the queue_size is at its maximal queue size will leave the system without finishing it.}
 
 \item{schedule}{Can be used to define work schedules for resources, when present the capacity parameter will be ignored.Accepts schedules created by the schedule()-function of the simmer-package (see ?schedule())}
+}
+\value{
+Process simulation model met simmer traj en simmer simmulation environment
 }
 \description{
 If the simulation_environment variable does not yet exists in the global environment. The function first creates

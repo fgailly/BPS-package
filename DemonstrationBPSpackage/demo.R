@@ -2,6 +2,8 @@ rm(list = ls())
 library('BPS')
 ###step 1: Import BPMN model
 processmodel <- import_BPMN(filepath = 'DemonstrationBPSpackage/processmodel/bps_demo_2.bpmn.xml')
+#processmodel <- import_BPMN(filepath = fname <- file.choose())
+class(processmodel)
 ###step 2: Add additional information not available in a BPMN
 #ACTIVITY DURATIONS
 processmodel <- set_activity_duration(processmodel,"CheckCust1", duration = function() rexp(1, rate= 1/1))
@@ -33,6 +35,7 @@ processmodel <- set_resource_to_activity(processmodel, "AssCla", resource = "cla
 
 #Now we can use the do.call function (of base R)
 processimulationmodel <- do.call(transform_BPS, args = processmodel)
+plot(processimulationmodel$traj)
 
 ##Arrival rate
 

@@ -4,14 +4,19 @@
 \alias{add_XOR_join}
 \title{Add a BPMN XOR-join element}
 \usage{
-add_XOR_join(name = "", prev_element = "", of_split = "")
+add_XOR_join(process, name = "", prev_element = "", of_split = "")
 }
 \arguments{
+\item{process}{the process model}
+
 \item{name}{character variable containing the name of the join}
 
 \item{prev_element}{character variable containing the name of the previous element in the BPMN. A join can have multiple previous elements, you should specify them all in a character vector. e.g: prev_element = c('element1','element2')}
 
 \item{of_split}{character variable specifying to which split this join belongs.}
+}
+\value{
+process model
 }
 \description{
 Creates a list in the global environment storing the information of the XOR-split.

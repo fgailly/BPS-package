@@ -264,7 +264,7 @@ transform_BPS <- function(...)
             }
             else
             {
-              print("test" + branches[[j]][[k]]$resource)
+
               seize(br, resource = branches[[j]][[k]]$resource, amount = as.integer(branches[[j]][[k]]$nmbr_resources))
               timeout(br, task = branches[[j]][[k]]$task)
               release(br, resource = branches[[j]][[k]]$resource, amount = as.integer(branches[[j]][[k]]$nmbr_resources))

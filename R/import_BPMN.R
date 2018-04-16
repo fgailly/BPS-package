@@ -24,6 +24,7 @@ import_BPMN <- function(filepath, subprocesses_included = FALSE)
   elements <- list()
   unique_names <- c()
   process <-list()
+  class(process)<-append(class(process), "ProcessModel")
   #Create list object storing critical information about the trajectory flow
   #delete BPMN elements that do not provide information for simulation (e.g. data Objects, pools/lanes)
   #throw error when BPMN elements are used that are not supported by our package (OR-GATES, event Based gates)

@@ -4,9 +4,11 @@
 \alias{add_intermediate_event}
 \title{Add an Intermediate BPMN-event}
 \usage{
-add_intermediate_event(name = "int_event1", prev_element = "")
+add_intermediate_event(process, name = "int_event1", prev_element = "")
 }
 \arguments{
+\item{process}{process model}
+
 \item{name}{character variable containing the name of the intermediate event}
 
 \item{prev_element}{character variable containing the name of the previous element in the BPMN}

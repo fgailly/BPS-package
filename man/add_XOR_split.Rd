@@ -4,9 +4,11 @@
 \alias{add_XOR_split}
 \title{Add a BPMN XOR-split element}
 \usage{
-add_XOR_split(name = "", prev_element = "")
+add_XOR_split(process, name = "", prev_element = "")
 }
 \arguments{
+\item{process}{processmodel}
+
 \item{name}{character variable containing the name of the split}
 
 \item{prev_element}{character variable containing the name of the previous element in the BPMN}

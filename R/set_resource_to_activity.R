@@ -16,7 +16,7 @@ set_resource_to_activity <- function(processmodel, activity, resource = '', amou
   if(!is.character(resource)) stop("resource is not of the character type")
   if(!is.numeric(amount) || as.integer(amount) != amount || amount < 0) stop("amount is not a positive integer")
   processmodel[[activity]]$resource <-resource
-  processmodel[[activity]]$amount <- amount
+  processmodel[[activity]]$nmbr_resources <- amount
   return(processmodel)
 }
 

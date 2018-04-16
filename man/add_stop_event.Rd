@@ -4,12 +4,17 @@
 \alias{add_stop_event}
 \title{Add a stop BPMN-event}
 \usage{
-add_stop_event(name = "stop_event1", prev_element = "")
+add_stop_event(process, name = "stop_event1", prev_element = "")
 }
 \arguments{
+\item{process}{the process model}
+
 \item{name}{character variable containing the name of the stop event}
 
 \item{prev_element}{character variable containing the name of the previous element in the BPMN}
+}
+\value{
+process model
 }
 \description{
 Creates a list in the global environment storing the information of the stop event.

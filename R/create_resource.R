@@ -17,20 +17,16 @@ create_resource <- function(process_sim_model, resource = '', capacity = 1, max_
 {
   if(!is.character(resource)) stop("resource is not of the character type")
   if(!is.numeric(capacity) || as.integer(capacity) != capacity || capacity < 0) stop("capacity is not a positive integer")
-  if(!missing(schedule))
+  if (is.null(process_sim_model[["sim_env"]])) stop("Simulation environment does not exist")
+  if(missing(schedule))
   {
-    if (!is.null(process_sim_model[["sim_env"]]))
-    {
-      add_resource(process_sim_model$sim_env, name = resource, capacity = capacity, queue_size = max_queue_size)
-    }
-    else
-    {
-      stop("Simulation environment does not exist")
-    }
+    add_resource(process_sim_model$sim_env, name = resource, capacity = capacity, queue_size = max_queue_size)
   }
   else
   {
-    stop("schedule parameter should be created by the schedule()-function")
+    add_resource(process_sim_model$sim_env, resource, schedule)
   }
+
+
   return(process_sim_model)
 }

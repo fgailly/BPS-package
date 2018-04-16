@@ -4,10 +4,12 @@
 \alias{set_probabilities_to_XOR_split}
 \title{Specify the probabilities of a XOR-split}
 \usage{
-set_probabilities_to_XOR_split(split, first_elements = c(),
+set_probabilities_to_XOR_split(process, split, first_elements = c(),
   probabilities = c(), prob_to_continue = 0)
 }
 \arguments{
+\item{process}{processmodel}
+
 \item{split}{The split object. Accepts a list object created with the add_XOR_split function OR with the import_BPMN function}
 
 \item{first_elements}{a character vector containing the name of the first element of each alternative path of the XOR-GATE structure.}

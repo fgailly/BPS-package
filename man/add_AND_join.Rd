@@ -4,14 +4,19 @@
 \alias{add_AND_join}
 \title{Add a BPMN AND-join element}
 \usage{
-add_AND_join(name = "", prev_element = "", of_split = "")
+add_AND_join(process, name = "", prev_element = "", of_split = "")
 }
 \arguments{
+\item{process}{the process model}
+
 \item{name}{character variable containing the name of the join}
 
 \item{prev_element}{character variable containing the name of the previous element in the BPMN. A join can have multiple previous elements, you should specify them all in a character vector. e.g: prev_element = c('element1','element2')}
 
 \item{of_split}{character variable specifying to which split this join belongs.}
+}
+\value{
+the process model
 }
 \description{
 Creates a list in the global environment storing the information of the AND-split.
