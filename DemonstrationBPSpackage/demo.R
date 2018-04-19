@@ -66,6 +66,6 @@ mean(transf$activity_time) #23.61 minutes
 ##dataframe containing information about resources
 resources <- get_mon_resources(processimulationmodel$sim_env)
 ##plots containing information
-plot(processimulationmodel$sim_env, what="resources", metric="usage", "op_CC1")
-plot(processimulationmodel$sim_env, what="resources", metric="utilization", "op_CC1")
-plot(processimulationmodel$sim_env, what="arrivals", metric="flow_time")
+plot(resources, metric="usage", "op_CC1")
+plot(resources, metric="utilization", "op_CC1")
+plot(arrivals,metric="waiting_time")
