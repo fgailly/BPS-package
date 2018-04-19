@@ -19,8 +19,12 @@
 import_BPMN <- function(filepath, subprocesses_included = FALSE)
 {
   #clean xml
-  test <- xml2::as_list(xml2::read_xml(filepath))
-  test <- test$process
+  #test <- xml2::as_list(xml2::read_xml(filepath))
+  #test <- test$process
+  test <- xml2::read_xml(filepath)
+  test <- xml2::xml_child(test, 2)
+  test <- xml2::as_list(test)
+
   elements <- list()
   unique_names <- c()
   process <-list()
